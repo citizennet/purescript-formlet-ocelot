@@ -1,4 +1,4 @@
-module Form2.Ocelot.KeyedArray
+module Formlet.Ocelot.KeyedArray
   ( KeyedArray
   , cons
   , delete
@@ -19,7 +19,7 @@ import Data.Lens.Index as Data.Lens.Index
 import Data.Lens.Record as Data.Lens.Record
 import Data.Traversable as Data.Traversable
 import Data.Tuple as Data.Tuple
-import Form2.Initial as Form2.Initial
+import Formlet.Initial as Formlet.Initial
 import Test.QuickCheck.Arbitrary as Test.QuickCheck.Arbitrary
 
 -- | A `KeyedArray` is an `Array` where each element has an automatically
@@ -56,7 +56,7 @@ instance traversableKeyedArray :: Data.Traversable.Traversable KeyedArray where
       $ traverse (\(Tuple id a) -> map (Tuple id) (f a))
       $ s.values
 
-instance initialKeyedArray :: Form2.Initial.Initial (KeyedArray a) where
+instance initialKeyedArray :: Formlet.Initial.Initial (KeyedArray a) where
   initial = KeyedArray { lastId: 0, values: [] }
 
 instance arbitraryKeyedArray ::

@@ -1,4 +1,4 @@
-module Form2.Ocelot.Tags.Halogen
+module Formlet.Ocelot.Tags.Halogen
   ( Input
   , Query
   , Slot
@@ -11,7 +11,7 @@ import CitizenNet.Prelude
 
 import Data.Array as Data.Array
 import Foreign.Object as Foreign.Object
-import Form2.Ocelot.Tags as Form2.Ocelot.Tags
+import Formlet.Ocelot.Tags as Formlet.Ocelot.Tags
 import Halogen as Halogen
 import Halogen.HTML as Halogen.HTML
 import Ocelot.Block.ItemContainer as Ocelot.Block.ItemContainer
@@ -24,9 +24,9 @@ render ::
   forall action config m slots.
   MonadAff m =>
   { readonly :: Boolean | config } ->
-  Form2.Ocelot.Tags.Render action ->
+  Formlet.Ocelot.Tags.Render action ->
   Array (Halogen.ComponentHTML action (Slots action slots) m)
-render config (Form2.Ocelot.Tags.Render renderSpec) =
+render config (Formlet.Ocelot.Tags.Render renderSpec) =
   [ Halogen.HTML.slot
       (Proxy :: Proxy "tags")
       unit

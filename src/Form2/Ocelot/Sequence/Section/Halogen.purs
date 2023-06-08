@@ -1,4 +1,4 @@
-module Form2.Ocelot.Sequence.Section.Halogen
+module Formlet.Ocelot.Sequence.Section.Halogen
   ( Input
   , Query
   , Slot
@@ -9,10 +9,10 @@ module Form2.Ocelot.Sequence.Section.Halogen
 import CitizenNet.Prelude
 
 import Data.Bifunctor as Data.Bifunctor
-import Form2.Field.Halogen as Form2.Field.Halogen
-import Form2.Ocelot.Dropdown.Halogen as Form2.Ocelot.Dropdown.Halogen
-import Form2.Ocelot.Sequence as Form2.Ocelot.Sequence
-import Form2.Render.List as Form2.Render.List
+import Formlet.Field.Halogen as Formlet.Field.Halogen
+import Formlet.Ocelot.Dropdown.Halogen as Formlet.Ocelot.Dropdown.Halogen
+import Formlet.Ocelot.Sequence as Formlet.Ocelot.Sequence
+import Formlet.Render.List as Formlet.Render.List
 import Halogen as Halogen
 import Halogen.HTML as Halogen.HTML
 import Halogen.HTML.Events as Halogen.HTML.Events
@@ -31,33 +31,33 @@ data Action config render output
 type Input config render output =
   { borders :: Boolean
   , config :: config
-  , key :: Form2.Render.List.Key
+  , key :: Formlet.Render.List.Key
   , index :: Int
   , label :: String
   , positions :: Array Int
   , readonly :: Boolean
   , removable :: Boolean
-  , section :: Form2.Ocelot.Sequence.SectionRender render output
+  , section :: Formlet.Ocelot.Sequence.SectionRender render output
   }
 
 type Query =
-  Form2.Field.Halogen.Query
+  Formlet.Field.Halogen.Query
 
--- We reuse `Form2.Field.Halogen.Slot` as the slot type for this component, so
--- that `ClearErrors` and `DisplayErrors` queries to `Form2.Field.Halogen`
+-- We reuse `Formlet.Field.Halogen.Slot` as the slot type for this component, so
+-- that `ClearErrors` and `DisplayErrors` queries to `Formlet.Field.Halogen`
 -- components can also be dispatched to this component, which we, then, route to
--- the child `Form2.Field.Halogen` components.
+-- the child `Formlet.Field.Halogen` components.
 --
--- We must do this because this component wraps `Form2.Field.Halogen`
+-- We must do this because this component wraps `Formlet.Field.Halogen`
 -- components, making them invisible to any parents. If we didn't do this, any
 -- `ClearErrors` or `DisplayErrors` queries wouldn't be caught by the child
--- `Form2.Field.Halogen` components.
+-- `Formlet.Field.Halogen` components.
 type Slot output =
-  Form2.Field.Halogen.Slot output
+  Formlet.Field.Halogen.Slot output
 
 type Slots output slots =
-  Form2.Field.Halogen.Slots output
-    ( position :: Form2.Ocelot.Dropdown.Halogen.Slot Int String
+  Formlet.Field.Halogen.Slots output
+    ( position :: Formlet.Ocelot.Dropdown.Halogen.Slot Int String
     | slots
     )
 
@@ -69,7 +69,7 @@ type State config render output =
 component ::
   forall config m output render slots.
   MonadAff m =>
-  (Form2.Render.List.Key -> config -> render output -> Halogen.ComponentHTML output (Slots output slots) m) ->
+  (Formlet.Render.List.Key -> config -> render output -> Halogen.ComponentHTML output (Slots output slots) m) ->
   Halogen.Component Query (Input config render output) output m
 component renderElement =
   Halogen.mkComponent
@@ -98,14 +98,14 @@ handleQuery ::
   Query a ->
   Halogen.HalogenM (State config render output) (Action config render output) (Slots output slots) output m (Maybe a)
 handleQuery = case _ of
-  Form2.Field.Halogen.ClearErrors done -> do
-    _ <- Halogen.queryAll (symbol { field: _ }) (Form2.Field.Halogen.ClearErrors unit)
+  Formlet.Field.Halogen.ClearErrors done -> do
+    _ <- Halogen.queryAll (symbol { field: _ }) (Formlet.Field.Halogen.ClearErrors unit)
     pure (Just done)
-  Form2.Field.Halogen.DisplayErrors done -> do
-    _ <- Halogen.queryAll (symbol { field: _ }) (Form2.Field.Halogen.DisplayErrors unit)
+  Formlet.Field.Halogen.DisplayErrors done -> do
+    _ <- Halogen.queryAll (symbol { field: _ }) (Formlet.Field.Halogen.DisplayErrors unit)
     pure (Just done)
-  Form2.Field.Halogen.GetErrors done -> do
-    results <- Halogen.queryAll (symbol { field: _ }) (Form2.Field.Halogen.GetErrors identity)
+  Formlet.Field.Halogen.GetErrors done -> do
+    results <- Halogen.queryAll (symbol { field: _ }) (Formlet.Field.Halogen.GetErrors identity)
     pure (Just (done (fold results)))
 
 initialState ::
@@ -117,7 +117,7 @@ initialState input = { collapsed: false, input }
 render ::
   forall config m output render slots.
   MonadAff m =>
-  (Form2.Render.List.Key -> config -> render output -> Halogen.ComponentHTML output (Slots output slots) m) ->
+  (Formlet.Render.List.Key -> config -> render output -> Halogen.ComponentHTML output (Slots output slots) m) ->
   State config render output ->
   Halogen.ComponentHTML (Action config render output) (Slots output slots) m
 render renderElement state =
@@ -135,7 +135,7 @@ render renderElement state =
   renderSectionHeader :: Halogen.ComponentHTML (Action config render output) (Slots output slots) m
   renderSectionHeader =
     let
-      Form2.Ocelot.Sequence.SectionRender section = state.input.section
+      Formlet.Ocelot.Sequence.SectionRender section = state.input.section
     in
       Halogen.HTML.div
         [ Ocelot.HTML.Properties.css "relative flex border-b border-grey-light mb-4"
@@ -155,7 +155,7 @@ render renderElement state =
             [ Halogen.HTML.slot
                 (Proxy :: Proxy "position")
                 state.input.key
-                (Halogen.hoist Halogen.liftAff Form2.Ocelot.Dropdown.Halogen.component)
+                (Halogen.hoist Halogen.liftAff Formlet.Ocelot.Dropdown.Halogen.component)
                 { disabled: state.input.readonly
                 , items: state.input.positions
                 , onChange: identity
@@ -182,7 +182,7 @@ render renderElement state =
   renderSectionBody :: Halogen.ComponentHTML output (Slots output slots) m
   renderSectionBody =
     let
-      Form2.Ocelot.Sequence.SectionRender section = state.input.section
+      Formlet.Ocelot.Sequence.SectionRender section = state.input.section
     in
       Ocelot.Block.Expandable.content_
         (if state.collapsed then Ocelot.Block.Expandable.Collapsed else Ocelot.Block.Expandable.Expanded)

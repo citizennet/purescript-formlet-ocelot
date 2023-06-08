@@ -1,4 +1,4 @@
-module Form2.Ocelot.Dropdown
+module Formlet.Ocelot.Dropdown
   ( Render(..)
   , Render'
   , dropdown
@@ -11,9 +11,9 @@ import CitizenNet.Prelude
 
 import Data.Array as Data.Array
 import Data.Enum as Data.Enum
-import Form2 as Form2
-import Form2.Ocelot.Enum as Form2.Ocelot.Enum
-import Form2.Render as Form2.Render
+import Formlet as Formlet
+import Formlet.Ocelot.Enum as Formlet.Ocelot.Enum
+import Formlet.Render as Formlet.Render
 
 -- We parametrize the `Render` type over the chosen `item` type but hide it
 -- under an existential quantifier. This is so we can use the same `Render`
@@ -54,16 +54,16 @@ dropdown ::
   , options :: Array a
   , placeholder :: String
   } ->
-  Form2.Form { readonly :: Boolean | config } (Form2.Render.Render options (dropdown :: Render | renders)) m (Maybe a) (Maybe a)
+  Formlet.Form { readonly :: Boolean | config } (Formlet.Render.Render options (dropdown :: Render | renders)) m (Maybe a) (Maybe a)
 dropdown { display, options, placeholder } =
-  Form2.form \({ readonly }) ->
+  Formlet.form \({ readonly }) ->
     { render:
         \value' ->
           let
             value :: Maybe a
             value = validate value'
           in
-            Form2.Render.inj
+            Formlet.Render.inj
               { dropdown:
                   Render \mkRender ->
                     mkRender
@@ -100,7 +100,7 @@ enumDropdown ::
   , exclude :: Array a
   , placeholder :: String
   } ->
-  Form2.Form { readonly :: Boolean | config } (Form2.Render.Render options (dropdown :: Render | renders)) m (Maybe a) (Maybe a)
+  Formlet.Form { readonly :: Boolean | config } (Formlet.Render.Render options (dropdown :: Render | renders)) m (Maybe a) (Maybe a)
 enumDropdown { display, exclude, placeholder } =
   dropdown
     { display
@@ -116,15 +116,15 @@ genericDropdown ::
   Applicative m =>
   Eq a =>
   Generic a rep =>
-  Form2.Ocelot.Enum.GenericEnumOptions a rep =>
+  Formlet.Ocelot.Enum.GenericEnumOptions a rep =>
   { display :: a -> String
   , placeholder :: String
   } ->
-  Form2.Form { readonly :: Boolean | config } (Form2.Render.Render options (dropdown :: Render | renders)) m (Maybe a) (Maybe a)
+  Formlet.Form { readonly :: Boolean | config } (Formlet.Render.Render options (dropdown :: Render | renders)) m (Maybe a) (Maybe a)
 genericDropdown { display, placeholder } =
   dropdown
     { display
-    , options: Form2.Ocelot.Enum.genericEnumOptions
+    , options: Formlet.Ocelot.Enum.genericEnumOptions
     , placeholder
     }
 

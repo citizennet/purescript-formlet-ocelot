@@ -1,4 +1,4 @@
-module Form2.Ocelot.TabularSelect
+module Formlet.Ocelot.TabularSelect
   ( Config
   , Form
   , Render(..)
@@ -10,9 +10,9 @@ module Form2.Ocelot.TabularSelect
 import CitizenNet.Prelude
 
 import Data.Array as Data.Array
-import Form2 as Form2
-import Form2.Ocelot.Enum as Form2.Ocelot.Enum
-import Form2.Render as Form2.Render
+import Formlet as Formlet
+import Formlet.Ocelot.Enum as Formlet.Ocelot.Enum
+import Formlet.Render as Formlet.Render
 import Option as Option
 
 type Config config =
@@ -21,7 +21,7 @@ type Config config =
   }
 
 type Form config m options renders =
-  Form2.Form (Config config) (Form2.Render.Render options (tabularSelect :: Render | renders)) m
+  Formlet.Form (Config config) (Formlet.Render.Render options (tabularSelect :: Render | renders)) m
 
 type Params a =
   ( columns :: Int
@@ -107,7 +107,7 @@ enumTabularSelect polyParams =
     }
   where
   options :: Array a
-  options = Form2.Ocelot.Enum.enumOptions
+  options = Formlet.Ocelot.Enum.enumOptions
 
   params :: Record (ParamsEnum a)
   params =
@@ -123,7 +123,7 @@ genericTabularSelect ::
   Applicative m =>
   Eq a =>
   Generic a rep =>
-  Form2.Ocelot.Enum.GenericEnumOptions a rep =>
+  Formlet.Ocelot.Enum.GenericEnumOptions a rep =>
   Option.FromRecord polyParams (ParamsRequiredGeneric a) (ParamsOptionalGeneric a) =>
   Option.ToRecord (ParamsRequiredGeneric a) (ParamsOptionalGeneric a) (ParamsGeneric a) =>
   Record polyParams ->
@@ -137,7 +137,7 @@ genericTabularSelect polyParams =
     }
   where
   options :: Array a
-  options = Form2.Ocelot.Enum.genericEnumOptions
+  options = Formlet.Ocelot.Enum.genericEnumOptions
 
   params :: Record (ParamsGeneric a)
   params =
@@ -157,10 +157,10 @@ tabularSelect ::
   Record polyParams ->
   Form config m options renders (Maybe a) (Maybe a)
 tabularSelect polyParams =
-  Form2.form \({ readonly }) ->
+  Formlet.form \({ readonly }) ->
     { render:
         \value ->
-          Form2.Render.inj
+          Formlet.Render.inj
             { tabularSelect:
                 Render
                   { columns: params.columns

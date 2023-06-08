@@ -1,12 +1,12 @@
-module Form2.Ocelot.Text
+module Formlet.Ocelot.Text
   ( Render(..)
   , text
   ) where
 
 import CitizenNet.Prelude
 
-import Form2 as Form2
-import Form2.Render as Form2.Render
+import Formlet as Formlet
+import Formlet.Render as Formlet.Render
 import Option as Option
 
 type Params =
@@ -40,10 +40,10 @@ text ::
   Option.FromRecord polyParams ParamsRequired ParamsOptional =>
   Option.ToRecord ParamsRequired ParamsOptional Params =>
   Record polyParams ->
-  Form2.Form { readonly :: Boolean | config } (Form2.Render.Render options (text :: Render | renders)) m String String
+  Formlet.Form { readonly :: Boolean | config } (Formlet.Render.Render options (text :: Render | renders)) m String String
 text polyParams =
-  Form2.form_ \({ readonly }) value ->
-    Form2.Render.inj
+  Formlet.form_ \({ readonly }) value ->
+    Formlet.Render.inj
       { text:
           Render
             { addonLeft: params.addonLeft

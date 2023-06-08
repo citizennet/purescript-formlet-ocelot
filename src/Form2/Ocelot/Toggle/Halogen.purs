@@ -1,10 +1,10 @@
-module Form2.Ocelot.Toggle.Halogen
+module Formlet.Ocelot.Toggle.Halogen
   ( render
   ) where
 
 import CitizenNet.Prelude
 
-import Form2.Ocelot.Toggle as Form2.Ocelot.Toggle
+import Formlet.Ocelot.Toggle as Formlet.Ocelot.Toggle
 import Halogen as Halogen
 import Halogen.HTML.Events as Halogen.HTML.Events
 import Halogen.HTML.Properties as Halogen.HTML.Properties
@@ -14,9 +14,9 @@ render ::
   forall slots m config action.
   { key :: String } ->
   { readonly :: Boolean | config } ->
-  Form2.Ocelot.Toggle.Render action ->
+  Formlet.Ocelot.Toggle.Render action ->
   Array (Halogen.ComponentHTML action slots m)
-render { key } { readonly } (Form2.Ocelot.Toggle.Render render') =
+render { key } { readonly } (Formlet.Ocelot.Toggle.Render render') =
   [ Ocelot.Block.Toggle.toggle
       [ Halogen.HTML.Properties.checked render'.value
       , Halogen.HTML.Properties.disabled (readonly || render'.readonly)

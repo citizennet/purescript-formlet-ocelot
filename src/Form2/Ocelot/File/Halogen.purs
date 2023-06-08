@@ -1,4 +1,4 @@
-module Form2.Ocelot.File.Halogen
+module Formlet.Ocelot.File.Halogen
   ( Query(..)
   , Slot
   , Slots
@@ -11,7 +11,7 @@ import Data.MediaType as Data.MediaType
 import Effect.Class.Console as Effect.Class.Console
 import FilePond as FilePond
 import FilePond.Halogen as FilePond.Halogen
-import Form2.Ocelot.File as Form2.Ocelot.File
+import Formlet.Ocelot.File as Formlet.Ocelot.File
 import Halogen as Halogen
 import Halogen.HTML as Halogen.HTML
 import Halogen.HTML.Properties as Halogen.HTML.Properties
@@ -24,9 +24,9 @@ render ::
   forall slots m config action.
   MonadAff m =>
   { readonly :: Boolean | config } ->
-  Form2.Ocelot.File.Render action ->
+  Formlet.Ocelot.File.Render action ->
   Array (Halogen.ComponentHTML action (Slots action slots) m)
-render { readonly } (Form2.Ocelot.File.Render withRender) =
+render { readonly } (Formlet.Ocelot.File.Render withRender) =
   [ withRender \render' ->
       Halogen.HTML.slot
         (Proxy :: Proxy "upload")
@@ -61,13 +61,13 @@ type ComponentM file output m =
   Halogen.HalogenM (State file output) (Action file output) () output m
 
 type Input file output =
-  { download :: Form2.Ocelot.File.URI
+  { download :: Formlet.Ocelot.File.URI
   , file :: Maybe file
   , getId :: file -> String
   , mediaTypes :: Array Data.MediaType.MediaType
   , onChange :: Maybe file -> output
   , readonly :: Boolean
-  , upload :: (Form2.Ocelot.File.Progress -> Effect Unit) -> Web.File.File.File -> Aff (Either String file)
+  , upload :: (Formlet.Ocelot.File.Progress -> Effect Unit) -> Web.File.File.File -> Aff (Either String file)
   }
 
 data Query (a :: Type)

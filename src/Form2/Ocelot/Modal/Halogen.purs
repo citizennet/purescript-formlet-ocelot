@@ -1,4 +1,4 @@
-module Form2.Ocelot.Modal.Halogen
+module Formlet.Ocelot.Modal.Halogen
   ( Input
   , Output(..)
   , Query(..)
@@ -11,8 +11,8 @@ import CitizenNet.Prelude
 import Data.Maybe as Data.Maybe
 import Effect.Aff as Effect.Aff
 import Effect.Aff.AVar as Effect.Aff.AVar
-import Form2 as Form2
-import Form2.Managed.Halogen as Form2.Managed.Halogen
+import Formlet as Formlet
+import Formlet.Managed.Halogen as Formlet.Managed.Halogen
 import Halogen as Halogen
 import Halogen.HTML as Halogen.HTML
 import Halogen.HTML.Events as Halogen.HTML.Events
@@ -81,7 +81,7 @@ type Slot config value result =
   Halogen.Slot (Query config value result) Output
 
 type Slots value result =
-  ( form :: Form2.Managed.Halogen.Slot value result Unit
+  ( form :: Formlet.Managed.Halogen.Slot value result Unit
   )
 
 type State config value result =
@@ -100,7 +100,7 @@ closeModal = do
     $ state.modal
   Halogen.modify_ _ { modal = Nothing }
 
--- | A modal window component that has a rendered `Form2.Form` as its content.
+-- | A modal window component that has a rendered `Formlet.Form` as its content.
 -- | This component is useful in workflows where one must show a form inside a
 -- | modal and wait for the user to fill in and submit the form; see the `Open`
 -- | query for more details.
@@ -110,8 +110,8 @@ component ::
   Functor render =>
   Option.FromRecord polyParams ParamsRequired ParamsOptional =>
   Option.ToRecord ParamsRequired ParamsOptional Params =>
-  Form2.Form config render m value result ->
-  (config -> render (m (value -> value)) -> Halogen.ComponentHTML (m (value -> value)) (Form2.Managed.Halogen.Slots m value slots) m) ->
+  Formlet.Form config render m value result ->
+  (config -> render (m (value -> value)) -> Halogen.ComponentHTML (m (value -> value)) (Formlet.Managed.Halogen.Slots m value slots) m) ->
   Record polyParams ->
   Component config value result m
 component form renderForm polyParams =
@@ -124,7 +124,7 @@ component form renderForm polyParams =
             , receive = Just <<< HandleReceive
             }
     , initialState
-    , render: render (Form2.Managed.Halogen.component form renderForm) params
+    , render: render (Formlet.Managed.Halogen.component form renderForm) params
     }
   where
   params :: Record Params
@@ -157,7 +157,7 @@ submit = do
     pure Nothing
   else
     map join $ for state.modal \modal -> do
-      mValidated <- Halogen.request (Proxy :: Proxy "form") unit Form2.Managed.Halogen.Validate
+      mValidated <- Halogen.request (Proxy :: Proxy "form") unit Formlet.Managed.Halogen.Validate
       case mValidated of
         Nothing -> pure Nothing
         Just (Left _) -> pure Nothing -- Validation errors already show up in the form
@@ -173,13 +173,13 @@ handleQuery ::
   ComponentM config value result m (Maybe a)
 handleQuery = case _ of
   ClearErrors a -> do
-    Just a <$ Halogen.tell (Proxy :: Proxy "form") unit Form2.Managed.Halogen.ClearErrors
+    Just a <$ Halogen.tell (Proxy :: Proxy "form") unit Formlet.Managed.Halogen.ClearErrors
   Close a -> do
     Just a <$ closeModal
   DisplayErrors a -> do
-    Just a <$ Halogen.tell (Proxy :: Proxy "form") unit Form2.Managed.Halogen.DisplayErrors
+    Just a <$ Halogen.tell (Proxy :: Proxy "form") unit Formlet.Managed.Halogen.DisplayErrors
   GetValue reply -> do
-    map reply <$> Halogen.request (Proxy :: Proxy "form") unit Form2.Managed.Halogen.GetValue
+    map reply <$> Halogen.request (Proxy :: Proxy "form") unit Formlet.Managed.Halogen.GetValue
   IsOpen reply -> do
     state <- Halogen.get
     pure $ Just (reply (Data.Maybe.isJust state.modal))
@@ -191,11 +191,11 @@ handleQuery = case _ of
       $ state.modal
     pure $ map reply (join result)
   SetValue value a -> do
-    Just a <$ Halogen.tell (Proxy :: Proxy "form") unit (Form2.Managed.Halogen.SetValue value)
+    Just a <$ Halogen.tell (Proxy :: Proxy "form") unit (Formlet.Managed.Halogen.SetValue value)
   Submit reply -> do
     map reply <$> submit
   Validate reply -> do
-    map reply <$> Halogen.request (Proxy :: Proxy "form") unit Form2.Managed.Halogen.Validate
+    map reply <$> Halogen.request (Proxy :: Proxy "form") unit Formlet.Managed.Halogen.Validate
 
 initialState ::
   forall config value result.
@@ -224,7 +224,7 @@ openModal config initialValue = do
 
 render ::
   forall config m result value.
-  Form2.Managed.Halogen.Component config m value result ->
+  Formlet.Managed.Halogen.Component config m value result ->
   Record Params ->
   State config value result ->
   ComponentHTML value result m
@@ -234,7 +234,7 @@ render formComponent params state = case state.modal of
 
 renderModal ::
   forall config m result value.
-  Form2.Managed.Halogen.Component config m value result ->
+  Formlet.Managed.Halogen.Component config m value result ->
   Record Params ->
   State config value result ->
   Modal config value result ->

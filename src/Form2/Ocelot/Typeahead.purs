@@ -1,4 +1,4 @@
-module Form2.Ocelot.Typeahead
+module Formlet.Ocelot.Typeahead
   ( Items(..)
   , Render(..)
   , async
@@ -13,7 +13,7 @@ import Data.Foldable as Data.Foldable
 import Data.Maybe as Data.Maybe
 import Data.Time.Duration as Data.Time.Duration
 import Foreign.Object as Foreign.Object
-import Form2 as Form2
+import Formlet as Formlet
 import Network.RemoteData as Network.RemoteData
 import Option as Option
 import Type.Row.Homogeneous as Type.Row.Homogeneous
@@ -76,7 +76,7 @@ derive instance functorRender :: Functor (Render container item)
 -- | A typeahead Form that gets its set of items with an asynchronous effect
 -- | based on a search `String`.
 -- |
--- | This form is not automatically injected into a `Form2.Render.Render`
+-- | This form is not automatically injected into a `Formlet.Render.Render`
 -- | because the `item` parameter appears on the `Render` type, and fixing a
 -- | single label for a typeahead `Render` would prevent us from having multiple
 -- | typeaheads with different `item` types in a single form.
@@ -89,14 +89,14 @@ async ::
   Option.FromRecord polyParamsAsync (ParamsAsyncRequired item record) ParamsAsyncOptional =>
   Option.ToRecord (ParamsAsyncRequired item record) ParamsAsyncOptional (ParamsAsync item record) =>
   Record polyParamsAsync ->
-  Form2.Form
+  Formlet.Form
     { readonly :: Boolean | config }
     (Render container item)
     m
     (container item)
     (container item)
 async polyParamsAsync =
-  Form2.form_ \{ readonly } value ->
+  Formlet.form_ \{ readonly } value ->
     Render
       { debounceTime: paramsAsync.debounceTime
       , items: Async paramsAsync.search
@@ -116,7 +116,7 @@ async polyParamsAsync =
 
 -- | A typeahead Form that has a static set of items to search for.
 -- |
--- | This form is not automatically injected into a `Form2.Render.Render`
+-- | This form is not automatically injected into a `Formlet.Render.Render`
 -- | because the `item` parameter appears on the `Render` type, and fixing a
 -- | single label for a typeahead `Render` would prevent us from having multiple
 -- | typeaheads with different `item` types in a single form.
@@ -131,14 +131,14 @@ sync ::
   Option.FromRecord polyParamsSync (ParamsSyncRequired item record) (ParamsSyncOptional item) =>
   Option.ToRecord (ParamsSyncRequired item record) (ParamsSyncOptional item) (ParamsSync item record) =>
   Record polyParamsSync ->
-  Form2.Form
+  Formlet.Form
     { readonly :: Boolean | config }
     (Render container item)
     m
     (container item)
     (container item)
 sync polyParamsSync =
-  Form2.form \{ readonly } ->
+  Formlet.form \{ readonly } ->
     { render:
         \value ->
           Render

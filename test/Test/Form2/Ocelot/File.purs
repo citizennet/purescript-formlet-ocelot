@@ -1,4 +1,4 @@
-module Test.Form2.Ocelot.File
+module Test.Formlet.Ocelot.File
   ( suite
   ) where
 
@@ -7,9 +7,9 @@ import CitizenNet.Prelude
 import Data.Identity as Data.Identity
 import Data.String.NonEmpty as Data.String.NonEmpty
 import Data.These as Data.These
-import Form2 as Form2
-import Form2.Ocelot.File as Form2.Ocelot.File
-import Form2.Render as Form2.Render
+import Formlet as Formlet
+import Formlet.Ocelot.File as Formlet.Ocelot.File
+import Formlet.Render as Formlet.Render
 import Test.Unit as Test.Unit
 import Test.Utils as Test.Utils
 import URI as URI
@@ -25,7 +25,7 @@ type TestUploadedFile =
 
 suite :: Test.Unit.TestSuite
 suite =
-  Test.Unit.suite "Form2.Ocelot.File" do
+  Test.Unit.suite "Formlet.Ocelot.File" do
     Test.Unit.suite "readonly" do
       let
         file1 :: Maybe TestUploadedFile
@@ -37,17 +37,17 @@ suite =
         render ::
           Maybe TestUploadedFile ->
           { readonly :: Boolean } ->
-          Form2.Ocelot.File.Render (Maybe TestUploadedFile -> Maybe TestUploadedFile)
+          Formlet.Ocelot.File.Render (Maybe TestUploadedFile -> Maybe TestUploadedFile)
         render fileToUpload { readonly } =
           map (un Data.Identity.Identity)
-            $ Form2.render (testFileForm fileToUpload) { readonly }
+            $ Formlet.render (testFileForm fileToUpload) { readonly }
             $ file1
       Test.Unit.test "`file` should not change its value if `readonly = true`" do
-        Form2.Ocelot.File.withRender (render file2 { readonly: true }) \rendered -> do
+        Formlet.Ocelot.File.withRender (render file2 { readonly: true }) \rendered -> do
           uploadedFile <- rendered.upload mempty mockFile
           Test.Utils.equal file1 (rendered.onChange (hush uploadedFile) file1)
       Test.Unit.test "`file` should change its value if `readonly = false`" do
-        Form2.Ocelot.File.withRender (render file2 { readonly: false }) \rendered -> do
+        Formlet.Ocelot.File.withRender (render file2 { readonly: false }) \rendered -> do
           uploadedFile <- rendered.upload mempty mockFile
           Test.Utils.equal file2 (rendered.onChange (hush uploadedFile) file1)
 
@@ -60,24 +60,24 @@ mockFile = Unsafe.Coerce.unsafeCoerce {}
 testFileForm ::
   forall config.
   Maybe TestUploadedFile ->
-  Form2.Form
+  Formlet.Form
     { readonly :: Boolean
     | config
     }
-    Form2.Ocelot.File.Render
+    Formlet.Ocelot.File.Render
     Data.Identity.Identity
     (Maybe TestUploadedFile)
     (Maybe TestUploadedFile)
 testFileForm fileToUpload =
-  Form2.mapRender (Form2.Render.match { file: \render -> render })
-    $ Form2.Ocelot.File.file
+  Formlet.mapRender (Formlet.Render.match { file: \render -> render })
+    $ Formlet.Ocelot.File.file
         { download
         , getId: _.name
         , mediaTypes: []
         , upload
         }
   where
-  download :: Form2.Ocelot.File.URI
+  download :: Formlet.Ocelot.File.URI
   download =
     URI.URI
       URI.Scheme.Common.http
@@ -96,7 +96,7 @@ testFileForm fileToUpload =
       Nothing
 
   upload ::
-    (Form2.Ocelot.File.Progress -> Effect Unit) ->
+    (Formlet.Ocelot.File.Progress -> Effect Unit) ->
     Web.File.File.File ->
     Aff (Either String TestUploadedFile)
   upload _ _ =

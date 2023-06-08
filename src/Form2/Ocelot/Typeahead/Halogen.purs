@@ -1,4 +1,4 @@
-module Form2.Ocelot.Typeahead.Halogen
+module Formlet.Ocelot.Typeahead.Halogen
   ( HTML
   , Input
   , Query
@@ -16,7 +16,7 @@ import DOM.HTML.Indexed as DOM.HTML.Indexed
 import Data.Fuzzy as Data.Fuzzy
 import Data.Time.Duration as Data.Time.Duration
 import Foreign.Object as Foreign.Object
-import Form2.Ocelot.Typeahead as Form2.Ocelot.Typeahead
+import Formlet.Ocelot.Typeahead as Formlet.Ocelot.Typeahead
 import Halogen as Halogen
 import Halogen.HTML as Halogen.HTML
 import Halogen.HTML.Properties as Halogen.HTML.Properties
@@ -31,8 +31,8 @@ type Slots action slots =
   (typeahead :: Slot action Unit | slots)
 
 -- | Render a fuzzy search result that has been injected into a specific record
--- | key in `toSearchRecord` (see `Form2.Ocelot.Typeahead.async` and
--- | `Form2.Ocelot.Typeahead.async`). This rendering function highlights matched
+-- | key in `toSearchRecord` (see `Formlet.Ocelot.Typeahead.async` and
+-- | `Formlet.Ocelot.Typeahead.async`). This rendering function highlights matched
 -- | characters.
 renderFuzzy ::
   forall w i a.
@@ -50,9 +50,9 @@ renderMulti ::
   MonadAff m =>
   (forall w i. Data.Fuzzy.Fuzzy item -> Halogen.HTML.HTML w i) ->
   { readonly :: Boolean | config } ->
-  Form2.Ocelot.Typeahead.Render Array item action ->
+  Formlet.Ocelot.Typeahead.Render Array item action ->
   Array (HTML action slots m)
-renderMulti renderFuzzy' { readonly } (Form2.Ocelot.Typeahead.Render render') =
+renderMulti renderFuzzy' { readonly } (Formlet.Ocelot.Typeahead.Render render') =
   [ Halogen.HTML.slot
       (Proxy :: Proxy "typeahead")
       unit
@@ -76,9 +76,9 @@ renderSingle ::
   MonadAff m =>
   (forall w i. Data.Fuzzy.Fuzzy item -> Halogen.HTML.HTML w i) ->
   { readonly :: Boolean | config } ->
-  Form2.Ocelot.Typeahead.Render Maybe item action ->
+  Formlet.Ocelot.Typeahead.Render Maybe item action ->
   Array (HTML action slots m)
-renderSingle renderFuzzy' { readonly } (Form2.Ocelot.Typeahead.Render render') =
+renderSingle renderFuzzy' { readonly } (Formlet.Ocelot.Typeahead.Render render') =
   [ Halogen.HTML.slot
       (Proxy :: Proxy "typeahead")
       unit
@@ -109,7 +109,7 @@ type ChildSlots container item =
 type Input container item action =
   { debounceTime :: Maybe Data.Time.Duration.Milliseconds
   , disabled :: Boolean
-  , items :: Form2.Ocelot.Typeahead.Items item
+  , items :: Formlet.Ocelot.Typeahead.Items item
   , onChange :: container item -> action
   , placeholder :: String
   , selection :: container item
@@ -184,8 +184,8 @@ component render' =
     void $ Halogen.tell (Proxy :: Proxy "typeahead") unit (Ocelot.Typeahead.ReplaceSelected input.selection)
     void $ Halogen.tell (Proxy :: Proxy "typeahead") unit (Ocelot.Typeahead.SetDisabled input.disabled)
     case input.items of
-      Form2.Ocelot.Typeahead.Async _ -> pure unit
-      Form2.Ocelot.Typeahead.Sync items -> void $ Halogen.tell (Proxy :: Proxy "typeahead") unit (Ocelot.Typeahead.ReplaceItems items)
+      Formlet.Ocelot.Typeahead.Async _ -> pure unit
+      Formlet.Ocelot.Typeahead.Sync items -> void $ Halogen.tell (Proxy :: Proxy "typeahead") unit (Ocelot.Typeahead.ReplaceItems items)
 
 renderMulti' ::
   forall action item m.
@@ -195,7 +195,7 @@ renderMulti' ::
   State Array item action ->
   Halogen.ComponentHTML (Action Array item action) (ChildSlots Array item) m
 renderMulti' renderFuzzy' state = case state.items of
-  Form2.Ocelot.Typeahead.Async search ->
+  Formlet.Ocelot.Typeahead.Async search ->
     Halogen.HTML.slot
       (Proxy :: Proxy "typeahead")
       unit
@@ -209,7 +209,7 @@ renderMulti' renderFuzzy' state = case state.items of
       )
         { debounceTime = state.debounceTime }
       HandleOutput
-  Form2.Ocelot.Typeahead.Sync _ ->
+  Formlet.Ocelot.Typeahead.Sync _ ->
     Halogen.HTML.slot
       (Proxy :: Proxy "typeahead")
       unit
@@ -231,7 +231,7 @@ renderSingle' ::
   State Maybe item action ->
   Halogen.ComponentHTML (Action Maybe item action) (ChildSlots Maybe item) m
 renderSingle' renderFuzzy' state = case state.items of
-  Form2.Ocelot.Typeahead.Async search ->
+  Formlet.Ocelot.Typeahead.Async search ->
     Halogen.HTML.slot
       (Proxy :: Proxy "typeahead")
       unit
@@ -245,7 +245,7 @@ renderSingle' renderFuzzy' state = case state.items of
       )
         { debounceTime = state.debounceTime }
       HandleOutput
-  Form2.Ocelot.Typeahead.Sync _ ->
+  Formlet.Ocelot.Typeahead.Sync _ ->
     Halogen.HTML.slot
       (Proxy :: Proxy "typeahead")
       unit

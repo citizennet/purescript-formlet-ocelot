@@ -1,4 +1,4 @@
-module Form2.Ocelot.Array
+module Formlet.Ocelot.Array
   ( Render(..)
   , RenderRow(..)
   , array
@@ -7,15 +7,15 @@ module Form2.Ocelot.Array
 import CitizenNet.Prelude
 
 import Data.Lens.Index as Data.Lens.Index
-import Form2 as Form2
-import Form2.Ocelot.KeyedArray as Form2.Ocelot.KeyedArray
-import Form2.Render as Form2.Render
-import Form2.Render.List as Form2.Render.List
+import Formlet as Formlet
+import Formlet.Ocelot.KeyedArray as Formlet.Ocelot.KeyedArray
+import Formlet.Render as Formlet.Render
+import Formlet.Render.List as Formlet.Render.List
 
 newtype Render render action =
   Render
     { onAddSection :: Maybe action
-    , rows :: Form2.Render.List.List (RenderRow render) action
+    , rows :: Formlet.Render.List.List (RenderRow render) action
     }
 
 derive instance newtypeRender :: Newtype (Render render action) _
@@ -30,36 +30,36 @@ newtype RenderRow render (action :: Type) =
 derive instance newtypeRenderRow :: Newtype (RenderRow render action) _
 derive instance functorRenderRow :: Functor render => Functor (RenderRow render)
 
--- | Embed a `Form2.Form` with `value` and `result` parameters into a sequence
+-- | Embed a `Formlet.Form` with `value` and `result` parameters into a sequence
 -- | `Form` that edits a `KeyedArray value` and produces an `Array result` as
 -- | its validated result.
 -- |
--- | Unlike `Form2.Ocelot.Sequence`, this form does not display labels or
+-- | Unlike `Formlet.Ocelot.Sequence`, this form does not display labels or
 -- | sequence numbers, and does not allow moving items in the list.
 array ::
   forall config m options render renders result value.
   Applicative m =>
   Functor render =>
   { defaultValue :: Maybe value
-  , form :: Form2.Form { readonly :: Boolean | config } render m value result
+  , form :: Formlet.Form { readonly :: Boolean | config } render m value result
   } ->
-  Form2.Form
+  Formlet.Form
     { readonly :: Boolean | config }
-    (Form2.Render.Render options (array :: Render render | renders))
+    (Formlet.Render.Render options (array :: Render render | renders))
     m
-    (Form2.Ocelot.KeyedArray.KeyedArray value)
+    (Formlet.Ocelot.KeyedArray.KeyedArray value)
     (Array result)
 array { defaultValue, form } =
-  Form2.Form \config@{ readonly } ->
+  Formlet.Form \config@{ readonly } ->
     { render: \values ->
-        Form2.Render.inj
+        Formlet.Render.inj
           { array:
               Render
-                { onAddSection: pure <<< Form2.Ocelot.KeyedArray.snoc <$> defaultValue
+                { onAddSection: pure <<< Formlet.Ocelot.KeyedArray.snoc <$> defaultValue
                 , rows:
                     foldMapWithIndex
                       ( \index (Tuple id value) ->
-                          Form2.Render.List.List
+                          Formlet.Render.List.List
                             [ { key: show id
                               , render:
                                   RenderRow
@@ -67,18 +67,18 @@ array { defaultValue, form } =
                                         if readonly then
                                           Nothing
                                         else
-                                          Just $ pure (Form2.Ocelot.KeyedArray.delete index)
+                                          Just $ pure (Formlet.Ocelot.KeyedArray.delete index)
                                     , render:
                                         map (map (if readonly then const identity else Data.Lens.Index.ix index))
-                                          $ (un Form2.Form form config).render
+                                          $ (un Formlet.Form form config).render
                                           $ value
                                     }
                               }
                             ]
                       )
-                      $ Form2.Ocelot.KeyedArray.toArray'
+                      $ Formlet.Ocelot.KeyedArray.toArray'
                       $ values
                 }
           }
-    , validate: traverse (un Form2.Form form config).validate <<< Form2.Ocelot.KeyedArray.toArray
+    , validate: traverse (un Formlet.Form form config).validate <<< Formlet.Ocelot.KeyedArray.toArray
     }

@@ -1,4 +1,4 @@
-module Test.Form2.Ocelot.Typeahead
+module Test.Formlet.Ocelot.Typeahead
   ( suite
   ) where
 
@@ -8,8 +8,8 @@ import Control.Monad.Gen.Common as Control.Monad.Gen.Common
 import Data.Array as Data.Array
 import Data.Array.NonEmpty as Data.Array.NonEmpty
 import Data.Identity as Data.Identity
-import Form2 as Form2
-import Form2.Ocelot.Typeahead as Form2.Ocelot.Typeahead
+import Formlet as Formlet
+import Formlet.Ocelot.Typeahead as Formlet.Ocelot.Typeahead
 import Test.QuickCheck ((===))
 import Test.QuickCheck.Arbitrary as Test.QuickCheck.Arbitrary
 import Test.QuickCheck.Gen as Test.QuickCheck.Gen
@@ -18,7 +18,7 @@ import Test.Unit.QuickCheck as Test.Unit.QuickCheck
 
 suite :: Test.Unit.TestSuite
 suite =
-  Test.Unit.suite "Form2.Ocelot.Typeahead" do
+  Test.Unit.suite "Formlet.Ocelot.Typeahead" do
     Test.Unit.suite "`sync` typeahead" do
       Test.Unit.test "`sync` typeahead should not change to a value that is not in the options" do
         Test.Unit.QuickCheck.quickCheck \value isInOptions items -> do
@@ -28,11 +28,11 @@ suite =
             else
               Test.QuickCheck.Arbitrary.arbitrary
           let
-            rendered :: Form2.Ocelot.Typeahead.Render Maybe String (Maybe String -> Maybe String)
+            rendered :: Formlet.Ocelot.Typeahead.Render Maybe String (Maybe String -> Maybe String)
             rendered =
               map (un Data.Identity.Identity)
-                $ Form2.render
-                    ( Form2.Ocelot.Typeahead.sync
+                $ Formlet.render
+                    ( Formlet.Ocelot.Typeahead.sync
                         { items: pure (Data.Array.NonEmpty.toArray items)
                         , toSearchRecord
                         }
@@ -46,14 +46,14 @@ suite =
               Just value''
                 | Data.Array.NonEmpty.elem value'' items -> Just value''
               Just _ -> value
-          pure $ expected === (un Form2.Ocelot.Typeahead.Render rendered).onChange value' value
+          pure $ expected === (un Formlet.Ocelot.Typeahead.Render rendered).onChange value' value
       Test.Unit.test "`sync` typeahead should appear to have no rendered value if the selected value is not in the options" do
         Test.Unit.QuickCheck.quickCheck \value items ->
           let
-            rendered :: Form2.Ocelot.Typeahead.Render Maybe String (Maybe String -> Maybe String)
+            rendered :: Formlet.Ocelot.Typeahead.Render Maybe String (Maybe String -> Maybe String)
             rendered =
               map (un Data.Identity.Identity)
-                $ Form2.render (Form2.Ocelot.Typeahead.sync { items: pure items, toSearchRecord }) { readonly: false }
+                $ Formlet.render (Formlet.Ocelot.Typeahead.sync { items: pure items, toSearchRecord }) { readonly: false }
                 $ value
 
             expected :: Maybe String
@@ -63,14 +63,14 @@ suite =
                 | Data.Array.elem value' items -> Just value'
               Just _ -> Nothing
           in
-            expected === (un Form2.Ocelot.Typeahead.Render rendered).value
+            expected === (un Formlet.Ocelot.Typeahead.Render rendered).value
       Test.Unit.test "`sync` typeahead should validate as having no selected value if the selected value is not in the options" do
         Test.Unit.QuickCheck.quickCheck \value items ->
           let
             result :: Either (Array String) (Maybe String)
             result =
-              Form2.validate
-                (Form2.Ocelot.Typeahead.sync { items: pure items, toSearchRecord } :: Form2.Form _ _ Data.Identity.Identity _ _)
+              Formlet.validate
+                (Formlet.Ocelot.Typeahead.sync { items: pure items, toSearchRecord } :: Formlet.Form _ _ Data.Identity.Identity _ _)
                 { readonly: false }
                 value
 
@@ -89,11 +89,11 @@ suite =
             select :: { id :: Int, value :: String } -> { id :: Int, value :: String } -> Boolean
             select a b = a.id == b.id
 
-            rendered :: Form2.Ocelot.Typeahead.Render Maybe { id :: Int, value :: String } (Maybe { id :: Int, value :: String } -> Maybe { id :: Int, value :: String })
+            rendered :: Formlet.Ocelot.Typeahead.Render Maybe { id :: Int, value :: String } (Maybe { id :: Int, value :: String } -> Maybe { id :: Int, value :: String })
             rendered =
               map (un Data.Identity.Identity)
-                $ Form2.render
-                    ( Form2.Ocelot.Typeahead.sync
+                $ Formlet.render
+                    ( Formlet.Ocelot.Typeahead.sync
                         { items: pure (Data.Array.NonEmpty.toArray items)
                         , select
                         , toSearchRecord: toSearchRecord <<< _.value
@@ -106,17 +106,17 @@ suite =
             expected = case value of
               Nothing -> Nothing
               Just value' -> Data.Array.NonEmpty.find (select value') items
-          pure $ expected === (un Form2.Ocelot.Typeahead.Render rendered).value
+          pure $ expected === (un Formlet.Ocelot.Typeahead.Render rendered).value
       Test.Unit.test "`sync` typeahead should not change its value if `readonly = true`" do
         Test.Unit.QuickCheck.quickCheck \items readonly -> do
           value <- Control.Monad.Gen.Common.genMaybe (Test.QuickCheck.Gen.elements items)
           value' <- Control.Monad.Gen.Common.genMaybe (Test.QuickCheck.Gen.elements items)
           let
-            rendered :: Form2.Ocelot.Typeahead.Render Maybe String (Maybe String -> Maybe String)
+            rendered :: Formlet.Ocelot.Typeahead.Render Maybe String (Maybe String -> Maybe String)
             rendered =
               map (un Data.Identity.Identity)
-                $ Form2.render
-                    ( Form2.Ocelot.Typeahead.sync
+                $ Formlet.render
+                    ( Formlet.Ocelot.Typeahead.sync
                         { items: pure (Data.Array.NonEmpty.toArray items)
                         , toSearchRecord
                         }
@@ -126,7 +126,7 @@ suite =
 
             expected :: Maybe String
             expected = if readonly then value else value'
-          pure $ expected === (un Form2.Ocelot.Typeahead.Render rendered).onChange value' value
+          pure $ expected === (un Formlet.Ocelot.Typeahead.Render rendered).onChange value' value
     -- For async typeaheads we cannot test validation or the interaction between
     -- the selected value and the item options because the options are loaded
     -- asynchronously. For that reason, validation should also be asynchronous
@@ -141,15 +141,15 @@ suite =
             search :: String -> Aff (Either String (Array String))
             search _ = pure (Right (Data.Array.NonEmpty.toArray items))
 
-            rendered :: Form2.Ocelot.Typeahead.Render Maybe String (Maybe String -> Maybe String)
+            rendered :: Formlet.Ocelot.Typeahead.Render Maybe String (Maybe String -> Maybe String)
             rendered =
               map (un Data.Identity.Identity)
-                $ Form2.render (Form2.Ocelot.Typeahead.async { search, toSearchRecord }) { readonly }
+                $ Formlet.render (Formlet.Ocelot.Typeahead.async { search, toSearchRecord }) { readonly }
                 $ value
 
             expected :: Maybe String
             expected = if readonly then value else value'
-          pure $ expected === (un Form2.Ocelot.Typeahead.Render rendered).onChange value' value
+          pure $ expected === (un Formlet.Ocelot.Typeahead.Render rendered).onChange value' value
 
 toSearchRecord :: String -> { item :: String }
 toSearchRecord = { item: _ }

@@ -1,4 +1,4 @@
-module Form2.Ocelot.Checkbox
+module Formlet.Ocelot.Checkbox
   ( Render(..)
   , checkbox
   , checkboxSet
@@ -10,9 +10,9 @@ module Form2.Ocelot.Checkbox
 import CitizenNet.Prelude
 
 import Data.Set as Data.Set
-import Form2 as Form2
-import Form2.Ocelot.Enum as Form2.Ocelot.Enum
-import Form2.Render as Form2.Render
+import Formlet as Formlet
+import Formlet.Ocelot.Enum as Formlet.Ocelot.Enum
+import Formlet.Render as Formlet.Render
 
 newtype Render a =
   Render
@@ -33,35 +33,35 @@ derive newtype instance Monoid (Render a)
 
 -- | A singleton checkbox Form that has `Boolean` as its input and output types.
 -- | Its render functor is also a `Monoid`, so it can be used in ado-notation.
--- | This should be used in conjunction with `Form2.Checkbox.checkboxes`, e.g.:
+-- | This should be used in conjunction with `Formlet.Checkbox.checkboxes`, e.g.:
 -- |
 -- | ```purescript
 -- | myCheckboxesForm ::
 -- |   forall config m options renders.
 -- |   Applicative m =>
--- |   Form2.Form
+-- |   Formlet.Form
 -- |     { readonly :: Boolean | config }
 -- |     m
--- |     (Form2.Render.Render options ( checkbox :: Form2.Checkbox.Render | renders ))
+-- |     (Formlet.Render.Render options ( checkbox :: Formlet.Checkbox.Render | renders ))
 -- |     { foo :: Boolean, bar :: Boolean }
 -- |     Boolean
 -- | myCheckboxesForm =
--- |   Form2.Checkbox.checkboxes ado
+-- |   Formlet.Checkbox.checkboxes ado
 -- |     foo <-
--- |       Form2.overRecord { foo: _ }
--- |         $ Form2.Checkbox.checkbox "Foo"
+-- |       Formlet.overRecord { foo: _ }
+-- |         $ Formlet.Checkbox.checkbox "Foo"
 -- |     bar <-
--- |       Form2.overRecord { bar: _ }
--- |         $ Form2.Checkbox.checkbox "Bar"
+-- |       Formlet.overRecord { bar: _ }
+-- |         $ Formlet.Checkbox.checkbox "Bar"
 -- |     in foo || bar
 -- | ```
 checkbox ::
   forall config m.
   Applicative m =>
   String ->
-  Form2.Form { readonly :: Boolean | config } Render m Boolean Boolean
+  Formlet.Form { readonly :: Boolean | config } Render m Boolean Boolean
 checkbox label =
-  Form2.form_ \{ readonly } checked ->
+  Formlet.form_ \{ readonly } checked ->
     Render
       [ { checked
         , label
@@ -80,12 +80,12 @@ checkboxSet ::
   { display :: a -> String
   , options :: Array a
   } ->
-  Form2.Form { readonly :: Boolean | config } (Form2.Render.Render options (checkbox :: Render | renders)) m (Set a) (Set a)
+  Formlet.Form { readonly :: Boolean | config } (Formlet.Render.Render options (checkbox :: Render | renders)) m (Set a) (Set a)
 checkboxSet { display, options } =
-  Form2.form \{ readonly } ->
+  Formlet.form \{ readonly } ->
     { render:
         \value ->
-          Form2.Render.inj
+          Formlet.Render.inj
             { checkbox:
                 Render
                   $ options
@@ -114,9 +114,9 @@ checkboxSet { display, options } =
 checkboxes ::
   forall config m options renders result value.
   Applicative m =>
-  Form2.Form { readonly :: Boolean | config } Render m value result ->
-  Form2.Form { readonly :: Boolean | config } (Form2.Render.Render options (checkbox :: Render | renders)) m value result
-checkboxes = Form2.mapRender (Form2.Render.inj <<< { checkbox: _ })
+  Formlet.Form { readonly :: Boolean | config } Render m value result ->
+  Formlet.Form { readonly :: Boolean | config } (Formlet.Render.Render options (checkbox :: Render | renders)) m value result
+checkboxes = Formlet.mapRender (Formlet.Render.inj <<< { checkbox: _ })
 
 -- | A `checkboxSet` Form where all option values are filled in based on the
 -- | `Bounded` `Enum` instances for the value type.
@@ -127,11 +127,11 @@ enumCheckboxSet ::
   Bounded a =>
   Enum a =>
   (a -> String) ->
-  Form2.Form { readonly :: Boolean | config } (Form2.Render.Render options (checkbox :: Render | renders)) m (Set a) (Set a)
+  Formlet.Form { readonly :: Boolean | config } (Formlet.Render.Render options (checkbox :: Render | renders)) m (Set a) (Set a)
 enumCheckboxSet display =
   checkboxSet
     { display
-    , options: Form2.Ocelot.Enum.enumOptions
+    , options: Formlet.Ocelot.Enum.enumOptions
     }
 
 -- | A `checkboxSet` Form where all option values are filled in with the
@@ -141,11 +141,11 @@ genericCheckboxSet ::
   Applicative m =>
   Ord a =>
   Generic a rep =>
-  Form2.Ocelot.Enum.GenericEnumOptions a rep =>
+  Formlet.Ocelot.Enum.GenericEnumOptions a rep =>
   (a -> String) ->
-  Form2.Form { readonly :: Boolean | config } (Form2.Render.Render options (checkbox :: Render | renders)) m (Set a) (Set a)
+  Formlet.Form { readonly :: Boolean | config } (Formlet.Render.Render options (checkbox :: Render | renders)) m (Set a) (Set a)
 genericCheckboxSet display =
   checkboxSet
     { display
-    , options: Form2.Ocelot.Enum.genericEnumOptions
+    , options: Formlet.Ocelot.Enum.genericEnumOptions
     }

@@ -1,12 +1,12 @@
-module Form2.Ocelot.DateTime
+module Formlet.Ocelot.DateTime
   ( Render(..)
   , dateTime
   ) where
 
 import CitizenNet.Prelude
 
-import Form2 as Form2
-import Form2.Render as Form2.Render
+import Formlet as Formlet
+import Formlet.Render as Formlet.Render
 import TimeZone as TimeZone
 
 newtype Render action =
@@ -25,18 +25,18 @@ dateTime ::
   forall config options renders m.
   Applicative m =>
   { placeholder :: String } ->
-  Form2.Form
+  Formlet.Form
     { readonly :: Boolean
     , timezone :: TimeZone.TimeZone
     | config
     }
-    (Form2.Render.Render options (dateTime :: Render | renders))
+    (Formlet.Render.Render options (dateTime :: Render | renders))
     m
     (Maybe DateTime)
     (Maybe DateTime)
 dateTime { placeholder } =
-  Form2.form_ \{ readonly, timezone } value ->
-    Form2.Render.inj
+  Formlet.form_ \{ readonly, timezone } value ->
+    Formlet.Render.inj
       { dateTime:
           Render
             { onChange: if readonly then const (pure identity) else pure <<< const

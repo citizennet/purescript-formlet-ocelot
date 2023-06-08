@@ -1,4 +1,4 @@
-module Form2.Ocelot.Sequence
+module Formlet.Ocelot.Sequence
   ( Params
   , ParamsOptional
   , ParamsRequired
@@ -14,10 +14,10 @@ import CitizenNet.Prelude
 
 import Data.Lens.Index as Data.Lens.Index
 import Data.Maybe as Data.Maybe
-import Form2 as Form2
-import Form2.Ocelot.KeyedArray as Form2.Ocelot.KeyedArray
-import Form2.Render as Form2.Render
-import Form2.Render.List as Form2.Render.List
+import Formlet as Formlet
+import Formlet.Ocelot.KeyedArray as Formlet.Ocelot.KeyedArray
+import Formlet.Render as Formlet.Render
+import Formlet.Render.List as Formlet.Render.List
 import Option as Option
 
 -- | * `defaultValue`
@@ -49,7 +49,7 @@ newtype Render render action = Render
   , onAddSection :: action
   , readonly :: Boolean
   , removable :: Boolean
-  , sections :: Form2.Render.List.List (SectionRender render) action
+  , sections :: Formlet.Render.List.List (SectionRender render) action
   }
 
 derive instance newtypeRender :: Newtype (Render render action) _
@@ -67,13 +67,13 @@ derive instance newtypeSectionRender :: Newtype (SectionRender render action) _
 
 derive instance functorSectionRender :: Functor render => Functor (SectionRender render)
 
-type Sequence = Form2.Ocelot.KeyedArray.KeyedArray
+type Sequence = Formlet.Ocelot.KeyedArray.KeyedArray
 
--- | Set up a `sequence` form data from an `Array` with `Form2.Ocelot.KeyedArray.fromArray`.
+-- | Set up a `sequence` form data from an `Array` with `Formlet.Ocelot.KeyedArray.fromArray`.
 fromArray :: forall a. Array a -> Sequence a
-fromArray = Form2.Ocelot.KeyedArray.fromArray
+fromArray = Formlet.Ocelot.KeyedArray.fromArray
 
--- | Embed a `Form2.Form` with `value` and `result` parameters into a sequence
+-- | Embed a `Formlet.Form` with `value` and `result` parameters into a sequence
 -- | `Form` that edits a `KeyedArray value` and produces an `Array result` as
 -- | its validated result.
 -- |
@@ -86,18 +86,18 @@ sequence ::
   Option.FromRecord polyParams ParamsRequired (ParamsOptional m value) =>
   Option.ToRecord ParamsRequired (ParamsOptional m value) (Params m value) =>
   Record polyParams ->
-  Form2.Form { readonly :: Boolean | config } render m value result ->
-  Form2.Form
+  Formlet.Form { readonly :: Boolean | config } render m value result ->
+  Formlet.Form
     { readonly :: Boolean | config }
-    (Form2.Render.Render options (sequence :: Render render | renders))
+    (Formlet.Render.Render options (sequence :: Render render | renders))
     m
     (Sequence value)
     (Array result)
-sequence polyParams (Form2.Form f) =
-  Form2.Form \config@{ readonly } ->
+sequence polyParams (Formlet.Form f) =
+  Formlet.Form \config@{ readonly } ->
     { render:
         \array ->
-          Form2.Render.inj
+          Formlet.Render.inj
             { sequence:
                 Render
                   { borders: fromMaybe true params.borders
@@ -108,13 +108,13 @@ sequence polyParams (Form2.Form f) =
                         Nothing -> pure identity
                         Just defaultValue
                           | readonly -> pure identity
-                          | otherwise -> Form2.Ocelot.KeyedArray.snoc <$> defaultValue
+                          | otherwise -> Formlet.Ocelot.KeyedArray.snoc <$> defaultValue
                   , readonly
                   , removable
                   , sections:
                       foldMapWithIndex
                         ( \index (Tuple id value) ->
-                            Form2.Render.List.List
+                            Formlet.Render.List.List
                               [ { key: show id
                                 , render:
                                     toSectionRender config
@@ -124,11 +124,11 @@ sequence polyParams (Form2.Form f) =
                                 }
                               ]
                         )
-                        $ Form2.Ocelot.KeyedArray.toArray'
+                        $ Formlet.Ocelot.KeyedArray.toArray'
                         $ array
                   }
             }
-    , validate: traverse (f config).validate <<< Form2.Ocelot.KeyedArray.toArray
+    , validate: traverse (f config).validate <<< Formlet.Ocelot.KeyedArray.toArray
     }
   where
   params :: Record (Params m value)
@@ -150,8 +150,8 @@ sequence polyParams (Form2.Form f) =
     SectionRender render (m (Sequence value -> Sequence value))
   toSectionRender { readonly } { index, render } =
     SectionRender
-      { onMove: pure <<< if readonly then const identity else Form2.Ocelot.KeyedArray.move index
-      , onRemove: pure if readonly || not removable then identity else Form2.Ocelot.KeyedArray.delete index
+      { onMove: pure <<< if readonly then const identity else Formlet.Ocelot.KeyedArray.move index
+      , onRemove: pure if readonly || not removable then identity else Formlet.Ocelot.KeyedArray.delete index
       , render:
           map
             (map (if readonly then const identity else Data.Lens.Index.ix index))
@@ -160,4 +160,4 @@ sequence polyParams (Form2.Form f) =
 
 -- | Convert the form state of a `sequence` into an `Array`.
 toArray :: forall a. Sequence a -> Array a
-toArray = Form2.Ocelot.KeyedArray.toArray
+toArray = Formlet.Ocelot.KeyedArray.toArray

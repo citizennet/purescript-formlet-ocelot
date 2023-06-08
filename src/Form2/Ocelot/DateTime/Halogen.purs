@@ -1,4 +1,4 @@
-module Form2.Ocelot.DateTime.Halogen
+module Formlet.Ocelot.DateTime.Halogen
   ( Query(..)
   , Output(..)
   , Slot
@@ -9,7 +9,7 @@ module Form2.Ocelot.DateTime.Halogen
 import CitizenNet.Prelude
 
 import Data.DateTime as Data.DateTime
-import Form2.Ocelot.DateTime as Form2.Ocelot.DateTime
+import Formlet.Ocelot.DateTime as Formlet.Ocelot.DateTime
 import Halogen as Halogen
 import Halogen.HTML as Halogen.HTML
 import Ocelot.DateTimePicker as Ocelot.DateTimePicker
@@ -23,9 +23,9 @@ render ::
   forall slots m config action.
   MonadAff m =>
   { readonly :: Boolean | config } ->
-  Form2.Ocelot.DateTime.Render action ->
+  Formlet.Ocelot.DateTime.Render action ->
   Array (Halogen.ComponentHTML action (Slots slots) m)
-render { readonly } (Form2.Ocelot.DateTime.Render render') =
+render { readonly } (Formlet.Ocelot.DateTime.Render render') =
   [ Halogen.HTML.slot
       (Proxy :: Proxy "dateTimePicker")
       unit

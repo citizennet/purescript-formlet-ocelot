@@ -1,4 +1,4 @@
-module Test.Form2.Ocelot.Radio
+module Test.Formlet.Ocelot.Radio
   ( suite
   ) where
 
@@ -9,9 +9,9 @@ import Data.Array as Data.Array
 import Data.Array.NonEmpty as Data.Array.NonEmpty
 import Data.Identity as Data.Identity
 import Data.Maybe as Data.Maybe
-import Form2 as Form2
-import Form2.Ocelot.Radio as Form2.Ocelot.Radio
-import Form2.Render as Form2.Render
+import Formlet as Formlet
+import Formlet.Ocelot.Radio as Formlet.Ocelot.Radio
+import Formlet.Render as Formlet.Render
 import Partial.Unsafe as Partial.Unsafe
 import Test.QuickCheck ((===))
 import Test.QuickCheck.Gen as Test.QuickCheck.Gen
@@ -20,15 +20,15 @@ import Test.Unit.QuickCheck as Test.Unit.QuickCheck
 
 suite :: Test.Unit.TestSuite
 suite =
-  Test.Unit.suite "Form2.Ocelot.Radio" do
+  Test.Unit.suite "Formlet.Ocelot.Radio" do
     Test.Unit.test "`radio` should render all options" do
       Test.Unit.QuickCheck.quickCheck \options ->
         let
-          rendered :: Form2.Ocelot.Radio.Render (Maybe String -> Maybe String)
+          rendered :: Formlet.Ocelot.Radio.Render (Maybe String -> Maybe String)
           rendered =
-            Form2.Render.match { radio: map (un Data.Identity.Identity) }
-              $ Form2.render
-                  ( Form2.Ocelot.Radio.radio
+            Formlet.Render.match { radio: map (un Data.Identity.Identity) }
+              $ Formlet.render
+                  ( Formlet.Ocelot.Radio.radio
                       { display: (_ <> "a")
                       , options
                       }
@@ -39,7 +39,7 @@ suite =
           expected :: Array String
           expected = map (_ <> "a") options
         in
-          expected === map _.label (un Form2.Ocelot.Radio.Render rendered).options
+          expected === map _.label (un Formlet.Ocelot.Radio.Render rendered).options
     Test.Unit.test "A `radio` option's `onSelect` should set the value to that option" do
       Test.Unit.QuickCheck.quickCheck \options -> do
         value <- Control.Monad.Gen.Common.genMaybe (Test.QuickCheck.Gen.elements options)
@@ -57,11 +57,11 @@ suite =
     Test.Unit.test "`radio` should appear to have no rendered value if the selected value is not in the options" do
       Test.Unit.QuickCheck.quickCheck \value options ->
         let
-          rendered :: Form2.Ocelot.Radio.Render (Maybe String -> Maybe String)
+          rendered :: Formlet.Ocelot.Radio.Render (Maybe String -> Maybe String)
           rendered =
-            Form2.Render.match { radio: map (un Data.Identity.Identity) }
-              $ Form2.render
-                  ( Form2.Ocelot.Radio.radio
+            Formlet.Render.match { radio: map (un Data.Identity.Identity) }
+              $ Formlet.render
+                  ( Formlet.Ocelot.Radio.radio
                       { display: identity
                       , options
                       }
@@ -76,18 +76,18 @@ suite =
               | Data.Array.elem value' options -> Just value'
             Just _ -> Nothing
         in
-          expected === (un Form2.Ocelot.Radio.Render rendered).value
+          expected === (un Formlet.Ocelot.Radio.Render rendered).value
     Test.Unit.test "`radio` should validate as having no selected value if the selected value is not in the options" do
       Test.Unit.QuickCheck.quickCheck \value options ->
         let
           result :: Either (Array String) (Maybe String)
           result =
-            Form2.validate
-              ( Form2.Ocelot.Radio.radio
+            Formlet.validate
+              ( Formlet.Ocelot.Radio.radio
                   { display: identity
                   , options
                   } ::
-                  Form2.Form _ _ Data.Identity.Identity _ _
+                  Formlet.Form _ _ Data.Identity.Identity _ _
               )
               { readonly: false }
               value
@@ -134,9 +134,9 @@ testRenderRadioOptions { display, options, readonly, value } =
   Partial.Unsafe.unsafePartial
     $ Data.Maybe.fromJust
     $ Data.Array.NonEmpty.fromArray
-    $ Form2.Render.match { radio: _.options <<< un Form2.Ocelot.Radio.Render <<< map (un Data.Identity.Identity) }
-    $ Form2.render
-        ( Form2.Ocelot.Radio.radio
+    $ Formlet.Render.match { radio: _.options <<< un Formlet.Ocelot.Radio.Render <<< map (un Data.Identity.Identity) }
+    $ Formlet.render
+        ( Formlet.Ocelot.Radio.radio
             { display
             , options: Data.Array.NonEmpty.toArray options
             }

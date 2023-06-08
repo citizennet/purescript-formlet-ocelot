@@ -1,10 +1,10 @@
-module Form2.Ocelot.Text.Halogen
+module Formlet.Ocelot.Text.Halogen
   ( render
   ) where
 
 import CitizenNet.Prelude
 
-import Form2.Ocelot.Text as Form2.Ocelot.Text
+import Formlet.Ocelot.Text as Formlet.Ocelot.Text
 import Halogen as Halogen
 import Halogen.HTML as Halogen.HTML
 import Halogen.HTML.Events as Halogen.HTML.Events
@@ -15,9 +15,9 @@ render ::
   forall slots m config action.
   { key :: String } ->
   { readonly :: Boolean | config } ->
-  Form2.Ocelot.Text.Render action ->
+  Formlet.Ocelot.Text.Render action ->
   Array (Halogen.ComponentHTML action slots m)
-render { key } { readonly } (Form2.Ocelot.Text.Render render') = case render'.addonLeft of
+render { key } { readonly } (Formlet.Ocelot.Text.Render render') = case render'.addonLeft of
   Nothing ->
     [ Ocelot.Block.Input.input inputProps
     ]

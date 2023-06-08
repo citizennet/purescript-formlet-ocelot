@@ -1,4 +1,4 @@
-module Form2.Ocelot.Render.Halogen
+module Formlet.Ocelot.Render.Halogen
   ( Slots
   , render
   , render'
@@ -7,23 +7,23 @@ module Form2.Ocelot.Render.Halogen
 import CitizenNet.Prelude
 
 import Data.Functor.Variant as Data.Functor.Variant
-import Form2.Field.Halogen as Form2.Field.Halogen
-import Form2.Ocelot.Array.Halogen as Form2.Ocelot.Array.Halogen
-import Form2.Ocelot.Checkbox.Halogen as Form2.Ocelot.Checkbox.Halogen
-import Form2.Ocelot.DateTime.Halogen as Form2.Ocelot.DateTime.Halogen
-import Form2.Ocelot.Dropdown.Halogen as Form2.Ocelot.Dropdown.Halogen
-import Form2.Ocelot.File.Halogen as Form2.Ocelot.File.Halogen
-import Form2.Ocelot.Radio.Halogen as Form2.Ocelot.Radio.Halogen
-import Form2.Ocelot.Render as Form2.Ocelot.Render
-import Form2.Ocelot.Sequence.Halogen as Form2.Ocelot.Sequence.Halogen
-import Form2.Ocelot.Table.Halogen as Form2.Ocelot.Table.Halogen
-import Form2.Ocelot.TabularSelect.Halogen as Form2.Ocelot.TabularSelect.Halogen
-import Form2.Ocelot.Tags.Halogen as Form2.Ocelot.Tags.Halogen
-import Form2.Ocelot.Text.Halogen as Form2.Ocelot.Text.Halogen
-import Form2.Ocelot.Textarea.Halogen as Form2.Ocelot.Textarea.Halogen
-import Form2.Ocelot.Toggle.Halogen as Form2.Ocelot.Toggle.Halogen
-import Form2.Render.Forest.Halogen as Form2.Render.Forest.Halogen
-import Form2.Render.List as Form2.Render.List
+import Formlet.Field.Halogen as Formlet.Field.Halogen
+import Formlet.Ocelot.Array.Halogen as Formlet.Ocelot.Array.Halogen
+import Formlet.Ocelot.Checkbox.Halogen as Formlet.Ocelot.Checkbox.Halogen
+import Formlet.Ocelot.DateTime.Halogen as Formlet.Ocelot.DateTime.Halogen
+import Formlet.Ocelot.Dropdown.Halogen as Formlet.Ocelot.Dropdown.Halogen
+import Formlet.Ocelot.File.Halogen as Formlet.Ocelot.File.Halogen
+import Formlet.Ocelot.Radio.Halogen as Formlet.Ocelot.Radio.Halogen
+import Formlet.Ocelot.Render as Formlet.Ocelot.Render
+import Formlet.Ocelot.Sequence.Halogen as Formlet.Ocelot.Sequence.Halogen
+import Formlet.Ocelot.Table.Halogen as Formlet.Ocelot.Table.Halogen
+import Formlet.Ocelot.TabularSelect.Halogen as Formlet.Ocelot.TabularSelect.Halogen
+import Formlet.Ocelot.Tags.Halogen as Formlet.Ocelot.Tags.Halogen
+import Formlet.Ocelot.Text.Halogen as Formlet.Ocelot.Text.Halogen
+import Formlet.Ocelot.Textarea.Halogen as Formlet.Ocelot.Textarea.Halogen
+import Formlet.Ocelot.Toggle.Halogen as Formlet.Ocelot.Toggle.Halogen
+import Formlet.Render.Forest.Halogen as Formlet.Render.Forest.Halogen
+import Formlet.Render.List as Formlet.Render.List
 import Halogen as Halogen
 import Halogen.HTML as Halogen.HTML
 import Ocelot.Block.FormField as Ocelot.Block.FormField
@@ -32,89 +32,89 @@ import Type.Row (type (+))
 import Unsafe.Coerce as Unsafe.Coerce
 
 type Slots action slots =
-  Form2.Field.Halogen.Slots action
-    + Form2.Ocelot.DateTime.Halogen.Slots
-    + Form2.Ocelot.Dropdown.Halogen.Slots action
-    + Form2.Ocelot.File.Halogen.Slots action
-    + Form2.Ocelot.Sequence.Halogen.Slots action
-    + Form2.Ocelot.Tags.Halogen.Slots action
+  Formlet.Field.Halogen.Slots action
+    + Formlet.Ocelot.DateTime.Halogen.Slots
+    + Formlet.Ocelot.Dropdown.Halogen.Slots action
+    + Formlet.Ocelot.File.Halogen.Slots action
+    + Formlet.Ocelot.Sequence.Halogen.Slots action
+    + Formlet.Ocelot.Tags.Halogen.Slots action
     + slots
 
--- | Transform the `Form2.Ocelot.Render.Forest` functor into Halogen HTML given ways of
+-- | Transform the `Formlet.Ocelot.Render.Forest` functor into Halogen HTML given ways of
 -- | handling any extra render cases and options.
 render ::
   forall config options renders action slots m.
   MonadAff m =>
-  (Form2.Render.List.Key -> { readonly :: Boolean | config } -> Option options -> Array (Halogen.ComponentHTML action (Slots action slots) m) -> Array (Halogen.ComponentHTML action (Slots action slots) m)) ->
-  (Form2.Render.List.Key -> { readonly :: Boolean | config } -> Data.Functor.Variant.VariantF renders action -> Array (Halogen.ComponentHTML action (Slots action slots) m)) ->
+  (Formlet.Render.List.Key -> { readonly :: Boolean | config } -> Option options -> Array (Halogen.ComponentHTML action (Slots action slots) m) -> Array (Halogen.ComponentHTML action (Slots action slots) m)) ->
+  (Formlet.Render.List.Key -> { readonly :: Boolean | config } -> Data.Functor.Variant.VariantF renders action -> Array (Halogen.ComponentHTML action (Slots action slots) m)) ->
   { readonly :: Boolean | config } ->
-  Form2.Ocelot.Render.Forest options renders action ->
+  Formlet.Ocelot.Render.Forest options renders action ->
   Halogen.ComponentHTML action (Slots action slots) m
 render renderOtherOptions renderOthers config' =
-  Form2.Render.Forest.Halogen.render renderOptions renderElement config'
-    <<< un Form2.Ocelot.Render.Forest
+  Formlet.Render.Forest.Halogen.render renderOptions renderElement config'
+    <<< un Formlet.Ocelot.Render.Forest
   where
   renderElement ::
-    Form2.Render.List.Key ->
+    Formlet.Render.List.Key ->
     { readonly :: Boolean | config } ->
-    Data.Functor.Variant.VariantF (Form2.Ocelot.Render.Renders options renders) action ->
+    Data.Functor.Variant.VariantF (Formlet.Ocelot.Render.Renders options renders) action ->
     Array (Halogen.ComponentHTML action (Slots action slots) m)
   renderElement key config renders =
     Data.Functor.Variant.onMatch
       { array:
-          Form2.Ocelot.Array.Halogen.render
+          Formlet.Ocelot.Array.Halogen.render
             ( \itemKey config'' ->
                 render renderOtherOptions renderOthers config''
-                  <<< Form2.Ocelot.Render.mapKey (itemKey <> _)
+                  <<< Formlet.Ocelot.Render.mapKey (itemKey <> _)
             )
             config
-      , checkbox: Form2.Ocelot.Checkbox.Halogen.render { key } config
-      , dateTime: Form2.Ocelot.DateTime.Halogen.render config
-      , dropdown: Form2.Ocelot.Dropdown.Halogen.render config
-      , file: Form2.Ocelot.File.Halogen.render config
-      , radio: Form2.Ocelot.Radio.Halogen.render { key } config
+      , checkbox: Formlet.Ocelot.Checkbox.Halogen.render { key } config
+      , dateTime: Formlet.Ocelot.DateTime.Halogen.render config
+      , dropdown: Formlet.Ocelot.Dropdown.Halogen.render config
+      , file: Formlet.Ocelot.File.Halogen.render config
+      , radio: Formlet.Ocelot.Radio.Halogen.render { key } config
       , sequence:
-          Form2.Ocelot.Sequence.Halogen.render
+          Formlet.Ocelot.Sequence.Halogen.render
             ( \sectionKey _ ->
                 render renderOtherOptions renderOthers config
-                  <<< Form2.Ocelot.Render.mapKey (sectionKey <> _)
+                  <<< Formlet.Ocelot.Render.mapKey (sectionKey <> _)
             )
             config
       , table:
-          Form2.Ocelot.Table.Halogen.render
+          Formlet.Ocelot.Table.Halogen.render
             ( \{ column, row } ->
                 render renderOtherOptions renderOthers config
-                  <<< Form2.Ocelot.Render.mapKey (_ <> "-" <> row <> "-" <> column)
+                  <<< Formlet.Ocelot.Render.mapKey (_ <> "-" <> row <> "-" <> column)
             )
-      , tabularSelect: Form2.Ocelot.TabularSelect.Halogen.render { key } config
-      , tags: Form2.Ocelot.Tags.Halogen.render config
-      , text: Form2.Ocelot.Text.Halogen.render { key } config
-      , textarea: Form2.Ocelot.Textarea.Halogen.render { key } config
-      , toggle: Form2.Ocelot.Toggle.Halogen.render { key } config
+      , tabularSelect: Formlet.Ocelot.TabularSelect.Halogen.render { key } config
+      , tags: Formlet.Ocelot.Tags.Halogen.render config
+      , text: Formlet.Ocelot.Text.Halogen.render { key } config
+      , textarea: Formlet.Ocelot.Textarea.Halogen.render { key } config
+      , toggle: Formlet.Ocelot.Toggle.Halogen.render { key } config
       }
       (renderOthers key config)
       renders
 
   renderOptions ::
-    Form2.Render.List.Key ->
+    Formlet.Render.List.Key ->
     { readonly :: Boolean | config } ->
-    Option (Form2.Ocelot.Render.Options options) ->
+    Option (Formlet.Ocelot.Render.Options options) ->
     Array (Halogen.ComponentHTML action (Slots action slots) m) ->
     Halogen.ComponentHTML action (Slots action slots) m
   renderOptions key config options children =
     Halogen.HTML.slot
       (Proxy :: Proxy "field")
       key
-      Form2.Field.Halogen.component
+      Formlet.Field.Halogen.component
       { errors: options .? { errors: _ }
       , render: renderField key config options children
       }
       identity
 
   renderField ::
-    Form2.Render.List.Key ->
+    Formlet.Render.List.Key ->
     { readonly :: Boolean | config } ->
-    Option (Form2.Ocelot.Render.Options options) ->
+    Option (Formlet.Ocelot.Render.Options options) ->
     Array (Halogen.ComponentHTML action (Slots action slots) m) ->
     Maybe (Array String) ->
     Halogen.ComponentHTML action (Slots action slots) m
@@ -160,7 +160,7 @@ render renderOtherOptions renderOthers config' =
             }
             (renderOtherOptions key config (coerceOptions options) children)
     where
-    coerceOptions :: Option (Form2.Ocelot.Render.Options options) -> Option options
+    coerceOptions :: Option (Formlet.Ocelot.Render.Options options) -> Option options
     coerceOptions = Unsafe.Coerce.unsafeCoerce
 
   renderValidation :: forall p i. Array String -> Array (Halogen.HTML.HTML p i)
@@ -175,13 +175,13 @@ render renderOtherOptions renderOthers config' =
           $ errors
       ]
 
--- | Transform the `Form2.Ocelot.Render.Forest` functor into Halogen HTML given that it
+-- | Transform the `Formlet.Ocelot.Render.Forest` functor into Halogen HTML given that it
 -- | contains no extra render cases and options than the ones present in
--- | `Form2.Ocelot.Render.Forest` by default.
+-- | `Formlet.Ocelot.Render.Forest` by default.
 render' ::
   forall config action slots m.
   MonadAff m =>
   { readonly :: Boolean | config } ->
-  Form2.Ocelot.Render.Forest () () action ->
+  Formlet.Ocelot.Render.Forest () () action ->
   Halogen.ComponentHTML action (Slots action slots) m
 render' = render (\_ _ _ -> identity) (\_ _ -> Data.Functor.Variant.case_)

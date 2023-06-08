@@ -1,4 +1,4 @@
-module Test.Form2.Ocelot.Checkbox
+module Test.Formlet.Ocelot.Checkbox
   ( suite
   ) where
 
@@ -10,9 +10,9 @@ import Data.Identity as Data.Identity
 import Data.Maybe as Data.Maybe
 import Data.Ord as Data.Ord
 import Data.Set as Data.Set
-import Form2 as Form2
-import Form2.Ocelot.Checkbox as Form2.Ocelot.Checkbox
-import Form2.Render as Form2.Render
+import Formlet as Formlet
+import Formlet.Ocelot.Checkbox as Formlet.Ocelot.Checkbox
+import Formlet.Render as Formlet.Render
 import Partial.Unsafe as Partial.Unsafe
 import Test.QuickCheck ((===))
 import Test.QuickCheck as Test.QuickCheck
@@ -22,7 +22,7 @@ import Test.Unit.QuickCheck as Test.Unit.QuickCheck
 
 suite :: Test.Unit.TestSuite
 suite =
-  Test.Unit.suite "Form2.Ocelot.Checkbox" do
+  Test.Unit.suite "Formlet.Ocelot.Checkbox" do
     checkboxSuite
     checkboxSetSuite
 
@@ -32,10 +32,10 @@ checkboxSuite = do
     Test.Unit.test "`checkbox` should not change its value if `readonly = true`" do
       Test.Unit.QuickCheck.quickCheck \value value' readonly ->
         let
-          rendered :: Form2.Ocelot.Checkbox.Render (Boolean -> Boolean)
+          rendered :: Formlet.Ocelot.Checkbox.Render (Boolean -> Boolean)
           rendered =
             map (un Data.Identity.Identity)
-              $ Form2.render (Form2.Ocelot.Checkbox.checkbox "Foo") { readonly }
+              $ Formlet.render (Formlet.Ocelot.Checkbox.checkbox "Foo") { readonly }
               $ value
 
           expected :: Boolean
@@ -43,7 +43,7 @@ checkboxSuite = do
 
           onChange' :: Maybe (Boolean -> Boolean -> Boolean)
           onChange' = ado
-            option <- Data.Array.head (un Form2.Ocelot.Checkbox.Render rendered)
+            option <- Data.Array.head (un Formlet.Ocelot.Checkbox.Render rendered)
             in option.onChange
         in
           case onChange' of
@@ -53,13 +53,13 @@ checkboxSuite = do
     Test.Unit.test "`checkboxes` should not change any of its values if `readonly = true`" do
       Test.Unit.QuickCheck.quickCheck \value checked readonly -> do
         let
-          rendered :: Form2.Ocelot.Checkbox.Render ({ foo :: Boolean, bar :: Boolean } -> { foo :: Boolean, bar :: Boolean })
+          rendered :: Formlet.Ocelot.Checkbox.Render ({ foo :: Boolean, bar :: Boolean } -> { foo :: Boolean, bar :: Boolean })
           rendered =
-            Form2.Render.match { checkbox: map (un Data.Identity.Identity) }
-              $ Form2.render
-                  ( Form2.Ocelot.Checkbox.checkboxes ado
-                      foo <- Form2.overRecord { foo: _ } (Form2.Ocelot.Checkbox.checkbox "Foo")
-                      bar <- Form2.overRecord { bar: _ } (Form2.Ocelot.Checkbox.checkbox "Bar")
+            Formlet.Render.match { checkbox: map (un Data.Identity.Identity) }
+              $ Formlet.render
+                  ( Formlet.Ocelot.Checkbox.checkboxes ado
+                      foo <- Formlet.overRecord { foo: _ } (Formlet.Ocelot.Checkbox.checkbox "Foo")
+                      bar <- Formlet.overRecord { bar: _ } (Formlet.Ocelot.Checkbox.checkbox "Bar")
                       in { foo, bar }
                   )
                   { readonly }
@@ -79,7 +79,7 @@ checkboxSuite = do
             Partial.Unsafe.unsafePartial
               $ Data.Maybe.fromJust
               $ Data.Array.NonEmpty.fromArray
-              $ un Form2.Ocelot.Checkbox.Render rendered
+              $ un Formlet.Ocelot.Checkbox.Render rendered
         selectedOption <- Test.QuickCheck.Gen.elements options
         let
           expected :: { foo :: Boolean, bar :: Boolean }
@@ -98,11 +98,11 @@ checkboxSetSuite =
     Test.Unit.test "`checkboxSet` should render all options" do
       Test.Unit.QuickCheck.quickCheck \options ->
         let
-          rendered :: Form2.Ocelot.Checkbox.Render (Set String -> Set String)
+          rendered :: Formlet.Ocelot.Checkbox.Render (Set String -> Set String)
           rendered =
-            Form2.Render.match { checkbox: map (un Data.Identity.Identity) }
-              $ Form2.render
-                  ( Form2.Ocelot.Checkbox.checkboxSet
+            Formlet.Render.match { checkbox: map (un Data.Identity.Identity) }
+              $ Formlet.render
+                  ( Formlet.Ocelot.Checkbox.checkboxSet
                       { display: (_ <> "a")
                       , options
                       }
@@ -113,7 +113,7 @@ checkboxSetSuite =
           expected :: Array String
           expected = map (_ <> "a") options
         in
-          expected === map _.label (un Form2.Ocelot.Checkbox.Render rendered)
+          expected === map _.label (un Formlet.Ocelot.Checkbox.Render rendered)
     Test.Unit.test "A `checkboxSet` option's `onChange` should appropriately change the Form's value" do
       Test.Unit.QuickCheck.quickCheck \options checked -> do
         value <- Data.Set.fromFoldable <$> genTake (Data.Array.NonEmpty.toArray options)
@@ -196,12 +196,12 @@ checkboxSetSuite =
 
           result :: Either (Array String) (Set String)
           result =
-            Form2.validate
-              ( Form2.Ocelot.Checkbox.checkboxSet
+            Formlet.validate
+              ( Formlet.Ocelot.Checkbox.checkboxSet
                   { display: identity
                   , options
                   } ::
-                  Form2.Form _ _ Data.Identity.Identity _ _
+                  Formlet.Form _ _ Data.Identity.Identity _ _
               )
               { readonly: false }
               value
@@ -264,9 +264,9 @@ testRenderCheckboxSetOptions { display, options, readonly, value } =
   Partial.Unsafe.unsafePartial
     $ Data.Maybe.fromJust
     $ Data.Array.NonEmpty.fromArray
-    $ Form2.Render.match { checkbox: un Form2.Ocelot.Checkbox.Render <<< map (un Data.Identity.Identity) }
-    $ Form2.render
-        ( Form2.Ocelot.Checkbox.checkboxSet
+    $ Formlet.Render.match { checkbox: un Formlet.Ocelot.Checkbox.Render <<< map (un Data.Identity.Identity) }
+    $ Formlet.render
+        ( Formlet.Ocelot.Checkbox.checkboxSet
             { display
             , options: Data.Array.NonEmpty.toArray options
             }

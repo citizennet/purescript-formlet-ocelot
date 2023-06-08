@@ -1,4 +1,4 @@
-module Form2.Ocelot.URL
+module Formlet.Ocelot.URL
   ( Params
   , ParamsOptional
   , ParamsRequired
@@ -11,10 +11,10 @@ import CitizenNet.Prelude
 import Data.Lens as Data.Lens
 import Data.String as Data.String
 import Data.String.NonEmpty as Data.String.NonEmpty
-import Form2 as Form2
-import Form2.Ocelot.Text as Form2.Ocelot.Text
-import Form2.Render as Form2.Render
-import Form2.Validation as Form2.Validation
+import Formlet as Formlet
+import Formlet.Ocelot.Text as Formlet.Ocelot.Text
+import Formlet.Render as Formlet.Render
+import Formlet.Validation as Formlet.Validation
 import Option as Option
 import Text.Parsing.Parser as Text.Parsing.Parser
 import URI as URI
@@ -43,25 +43,25 @@ url ::
   Applicative m =>
   Option.FromRecord params ParamsRequired ParamsOptional =>
   Record params ->
-  Form2.Form
+  Formlet.Form
     { readonly :: Boolean | config }
-    ( Form2.Render.Render
-        (errors :: Form2.Errors, required :: Boolean | options)
-        (text :: Form2.Ocelot.Text.Render | renders)
+    ( Formlet.Render.Render
+        (errors :: Formlet.Errors, required :: Boolean | options)
+        (text :: Formlet.Ocelot.Text.Render | renders)
     )
     m
     String
     (Maybe URI)
 url params' =
-  Form2.over isoStripSchemePrefix
-    $ Form2.Validation.validated (Form2.Validation.optional Data.String.NonEmpty.fromString urlValidator)
+  Formlet.over isoStripSchemePrefix
+    $ Formlet.Validation.validated (Formlet.Validation.optional Data.String.NonEmpty.fromString urlValidator)
     $ case schemePrefix of
         Nothing ->
-          Form2.Ocelot.Text.text
+          Formlet.Ocelot.Text.text
             { placeholder: params.placeholder
             }
         Just prefix ->
-          Form2.Ocelot.Text.text
+          Formlet.Ocelot.Text.text
             { addonLeft: Data.String.NonEmpty.toString prefix
             , placeholder: params.placeholder
             }
@@ -104,9 +104,9 @@ url params' =
         , parseUserInfo: pure
         }
 
-  urlValidator :: Form2.Validation.Validator Data.String.NonEmpty.NonEmptyString URI
+  urlValidator :: Formlet.Validation.Validator Data.String.NonEmpty.NonEmptyString URI
   urlValidator =
-    Form2.Validation.NotRequired \string ->
+    Formlet.Validation.NotRequired \string ->
       -- Using `Text.Parsing.Parser.parseErrorMessage` here doesn't produce
       -- useful error messages, so we just stick to a simple message instead.
       lmap (\_ -> "Invalid URL")

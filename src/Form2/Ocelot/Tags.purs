@@ -1,12 +1,12 @@
-module Form2.Ocelot.Tags
+module Formlet.Ocelot.Tags
   ( Render(..)
   , tags
   ) where
 
 import CitizenNet.Prelude
 
-import Form2 as Form2
-import Form2.Render as Form2.Render
+import Formlet as Formlet
+import Formlet.Render as Formlet.Render
 import Option as Option
 
 type Params =
@@ -52,15 +52,15 @@ tags ::
   Option.FromRecord polyParams ParamsRequired ParamsOptional =>
   Option.ToRecord ParamsRequired ParamsOptional Params =>
   Record polyParams ->
-  Form2.Form
+  Formlet.Form
     { readonly :: Boolean | config }
-    (Form2.Render.Render options (tags :: Render | renders))
+    (Formlet.Render.Render options (tags :: Render | renders))
     m
     (Array String)
     (Array String)
 tags polyParams =
-  Form2.form_ \config value ->
-    Form2.Render.inj
+  Formlet.form_ \config value ->
+    Formlet.Render.inj
       { tags:
           Render
             { items: fromMaybe [] params.items

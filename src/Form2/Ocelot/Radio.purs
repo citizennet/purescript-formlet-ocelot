@@ -1,4 +1,4 @@
-module Form2.Ocelot.Radio
+module Formlet.Ocelot.Radio
   ( Render(..)
   , enumRadio
   , genericRadio
@@ -8,9 +8,9 @@ module Form2.Ocelot.Radio
 import CitizenNet.Prelude
 
 import Data.Array as Data.Array
-import Form2 as Form2
-import Form2.Ocelot.Enum as Form2.Ocelot.Enum
-import Form2.Render as Form2.Render
+import Formlet as Formlet
+import Formlet.Ocelot.Enum as Formlet.Ocelot.Enum
+import Formlet.Render as Formlet.Render
 
 newtype Render action =
   Render
@@ -35,11 +35,11 @@ enumRadio ::
   Bounded a =>
   Enum a =>
   (a -> String) ->
-  Form2.Form { readonly :: Boolean | config } (Form2.Render.Render options (radio :: Render | renders)) m (Maybe a) (Maybe a)
+  Formlet.Form { readonly :: Boolean | config } (Formlet.Render.Render options (radio :: Render | renders)) m (Maybe a) (Maybe a)
 enumRadio display =
   radio
     { display
-    , options: Form2.Ocelot.Enum.enumOptions
+    , options: Formlet.Ocelot.Enum.enumOptions
     }
 
 -- | A `radio` Form where all option values are filled in with the constructors
@@ -49,13 +49,13 @@ genericRadio ::
   Applicative m =>
   Eq a =>
   Generic a rep =>
-  Form2.Ocelot.Enum.GenericEnumOptions a rep =>
+  Formlet.Ocelot.Enum.GenericEnumOptions a rep =>
   (a -> String) ->
-  Form2.Form { readonly :: Boolean | config } (Form2.Render.Render options (radio :: Render | renders)) m (Maybe a) (Maybe a)
+  Formlet.Form { readonly :: Boolean | config } (Formlet.Render.Render options (radio :: Render | renders)) m (Maybe a) (Maybe a)
 genericRadio display =
   radio
     { display
-    , options: Form2.Ocelot.Enum.genericEnumOptions
+    , options: Formlet.Ocelot.Enum.genericEnumOptions
     }
 
 -- | Build a singleton Radio Form given a list of options and a way of
@@ -67,12 +67,12 @@ radio ::
   { display :: a -> String
   , options :: Array a
   } ->
-  Form2.Form { readonly :: Boolean | config } (Form2.Render.Render options (radio :: Render | renders)) m (Maybe a) (Maybe a)
+  Formlet.Form { readonly :: Boolean | config } (Formlet.Render.Render options (radio :: Render | renders)) m (Maybe a) (Maybe a)
 radio { display, options } =
-  Form2.form \{ readonly } ->
+  Formlet.form \{ readonly } ->
     { render:
         \value ->
-          Form2.Render.inj
+          Formlet.Render.inj
             { radio:
                 Render
                   { options:

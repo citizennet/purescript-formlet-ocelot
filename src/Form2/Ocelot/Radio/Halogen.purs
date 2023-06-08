@@ -1,10 +1,10 @@
-module Form2.Ocelot.Radio.Halogen
+module Formlet.Ocelot.Radio.Halogen
   ( render
   ) where
 
 import CitizenNet.Prelude
 
-import Form2.Ocelot.Radio as Form2.Ocelot.Radio
+import Formlet.Ocelot.Radio as Formlet.Ocelot.Radio
 import Halogen as Halogen
 import Halogen.HTML as Halogen.HTML
 import Halogen.HTML.Events as Halogen.HTML.Events
@@ -15,9 +15,9 @@ render ::
   forall slots m config action.
   { key :: String } ->
   { readonly :: Boolean | config } ->
-  Form2.Ocelot.Radio.Render action ->
+  Formlet.Ocelot.Radio.Render action ->
   Array (Halogen.ComponentHTML action slots m)
-render { key } { readonly } (Form2.Ocelot.Radio.Render render') =
+render { key } { readonly } (Formlet.Ocelot.Radio.Render render') =
   render'.options
     # map \{ label, onSelect } ->
         Ocelot.Block.Radio.radio_

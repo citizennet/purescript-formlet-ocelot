@@ -1,4 +1,4 @@
-module Form2.Ocelot.Enum
+module Formlet.Ocelot.Enum
   ( class GenericEnumOptions
   , class GenericEnumOptionsFail
   , enumOptions

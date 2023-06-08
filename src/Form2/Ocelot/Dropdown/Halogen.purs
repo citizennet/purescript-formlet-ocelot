@@ -1,4 +1,4 @@
-module Form2.Ocelot.Dropdown.Halogen
+module Formlet.Ocelot.Dropdown.Halogen
   ( Query(..)
   , Slot
   , Slots
@@ -8,7 +8,7 @@ module Form2.Ocelot.Dropdown.Halogen
 
 import CitizenNet.Prelude
 
-import Form2.Ocelot.Dropdown as Form2.Ocelot.Dropdown
+import Formlet.Ocelot.Dropdown as Formlet.Ocelot.Dropdown
 import Halogen as Halogen
 import Halogen.HTML as Halogen.HTML
 import Ocelot.Button as Ocelot.Button
@@ -21,9 +21,9 @@ render ::
   forall slots m config action.
   MonadAff m =>
   { readonly :: Boolean | config } ->
-  Form2.Ocelot.Dropdown.Render action ->
+  Formlet.Ocelot.Dropdown.Render action ->
   Array (Halogen.ComponentHTML action (Slots action slots) m)
-render { readonly } (Form2.Ocelot.Dropdown.Render withRender) =
+render { readonly } (Formlet.Ocelot.Dropdown.Render withRender) =
   [ withRender \render' ->
       Halogen.HTML.slot
         (Proxy :: Proxy "dropdown")

@@ -1,4 +1,4 @@
-module Form2.Ocelot.File
+module Formlet.Ocelot.File
   ( Progress
   , Render(..)
   , Render'
@@ -10,8 +10,8 @@ module Form2.Ocelot.File
 import CitizenNet.Prelude
 
 import Data.MediaType as Data.MediaType
-import Form2 as Form2
-import Form2.Render as Form2.Render
+import Formlet as Formlet
+import Formlet.Render as Formlet.Render
 import URI as URI
 import URI.HostPortPair as URI.HostPortPair
 import Web.File.File as Web.File.File
@@ -71,17 +71,17 @@ file ::
   , mediaTypes :: Array Data.MediaType.MediaType
   , upload :: (Progress -> Effect Unit) -> Web.File.File.File -> Aff (Either String file)
   } ->
-  Form2.Form
+  Formlet.Form
     { readonly :: Boolean
     | config
     }
-    (Form2.Render.Render options (file :: Render | renders))
+    (Formlet.Render.Render options (file :: Render | renders))
     m
     (Maybe file)
     (Maybe file)
 file { download, getId, mediaTypes, upload } =
-  Form2.form_ \{ readonly } value ->
-    Form2.Render.inj
+  Formlet.form_ \{ readonly } value ->
+    Formlet.Render.inj
       { file:
           Render \cont ->
             cont

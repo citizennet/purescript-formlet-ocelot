@@ -1,4 +1,4 @@
-module Form2.Ocelot.Sequence.Halogen
+module Formlet.Ocelot.Sequence.Halogen
   ( Slots
   , render
   ) where
@@ -6,9 +6,9 @@ module Form2.Ocelot.Sequence.Halogen
 import CitizenNet.Prelude
 
 import Data.Array as Data.Array
-import Form2.Ocelot.Sequence as Form2.Ocelot.Sequence
-import Form2.Ocelot.Sequence.Section.Halogen as Form2.Ocelot.Sequence.Section.Halogen
-import Form2.Render.List as Form2.Render.List
+import Formlet.Ocelot.Sequence as Formlet.Ocelot.Sequence
+import Formlet.Ocelot.Sequence.Section.Halogen as Formlet.Ocelot.Sequence.Section.Halogen
+import Formlet.Render.List as Formlet.Render.List
 import Halogen as Halogen
 import Halogen.HTML as Halogen.HTML
 import Halogen.HTML.Elements.Keyed as Halogen.HTML.Elements.Keyed
@@ -18,20 +18,20 @@ import Ocelot.Button as Ocelot.Button
 import Ocelot.HTML.Properties as Ocelot.HTML.Properties
 
 type Slots action slots =
-  Form2.Ocelot.Sequence.Section.Halogen.Slots action slots
+  Formlet.Ocelot.Sequence.Section.Halogen.Slots action slots
 
--- | Renders a `Form2.Ocelot.Sequence.Render` given a way of rendering each individual
+-- | Renders a `Formlet.Ocelot.Sequence.Render` given a way of rendering each individual
 -- | `render` element of the sequence.
 render ::
   forall action config m render slots.
   MonadAff m =>
-  (Form2.Render.List.Key -> { readonly :: Boolean | config } -> render action -> Halogen.ComponentHTML action (Slots action slots) m) ->
+  (Formlet.Render.List.Key -> { readonly :: Boolean | config } -> render action -> Halogen.ComponentHTML action (Slots action slots) m) ->
   { readonly :: Boolean | config } ->
-  Form2.Ocelot.Sequence.Render render action ->
+  Formlet.Ocelot.Sequence.Render render action ->
   Array (Halogen.ComponentHTML action (Slots action slots) m)
-render renderElement config (Form2.Ocelot.Sequence.Render render') =
+render renderElement config (Formlet.Ocelot.Sequence.Render render') =
   [ let
-      positions = Data.Array.range 0 (Data.Array.length (un Form2.Render.List.List render'.sections) - 1)
+      positions = Data.Array.range 0 (Data.Array.length (un Formlet.Render.List.List render'.sections) - 1)
     in
       Halogen.HTML.Elements.Keyed.div_
         $ Data.Array.mapWithIndex
@@ -40,7 +40,7 @@ render renderElement config (Form2.Ocelot.Sequence.Render render') =
                   Halogen.HTML.slot
                     (Proxy :: Proxy "field")
                     key
-                    (Form2.Ocelot.Sequence.Section.Halogen.component renderElement)
+                    (Formlet.Ocelot.Sequence.Section.Halogen.component renderElement)
                     { borders: render'.borders
                     , config
                     , key
@@ -53,7 +53,7 @@ render renderElement config (Form2.Ocelot.Sequence.Render render') =
                     }
                     identity
             )
-        $ un Form2.Render.List.List render'.sections
+        $ un Formlet.Render.List.List render'.sections
   , if config.readonly || not render'.extensible then
       Halogen.HTML.text ""
     else

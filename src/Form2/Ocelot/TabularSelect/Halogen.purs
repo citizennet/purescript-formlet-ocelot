@@ -1,4 +1,4 @@
-module Form2.Ocelot.TabularSelect.Halogen
+module Formlet.Ocelot.TabularSelect.Halogen
   ( render
   ) where
 
@@ -6,7 +6,7 @@ import CitizenNet.Prelude
 
 import Data.Monoid as Data.Monoid
 import Foreign.Object as Foreign.Object
-import Form2.Ocelot.TabularSelect as Form2.Ocelot.TabularSelect
+import Formlet.Ocelot.TabularSelect as Formlet.Ocelot.TabularSelect
 import Halogen as Halogen
 import Halogen.HTML as Halogen.HTML
 import Halogen.HTML.Events as Halogen.HTML.Events
@@ -19,9 +19,9 @@ render ::
   forall slots m config action.
   { key :: String } ->
   { readonly :: Boolean | config } ->
-  Form2.Ocelot.TabularSelect.Render action ->
+  Formlet.Ocelot.TabularSelect.Render action ->
   Array (Halogen.ComponentHTML action slots m)
-render { key } { readonly } (Form2.Ocelot.TabularSelect.Render render') =
+render { key } { readonly } (Formlet.Ocelot.TabularSelect.Render render') =
 
   [ Halogen.HTML.div
       [ Ocelot.HTML.Properties.style

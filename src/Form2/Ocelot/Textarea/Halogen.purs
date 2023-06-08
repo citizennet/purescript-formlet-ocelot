@@ -1,10 +1,10 @@
-module Form2.Ocelot.Textarea.Halogen
+module Formlet.Ocelot.Textarea.Halogen
   ( render
   ) where
 
 import CitizenNet.Prelude
 
-import Form2.Ocelot.Textarea as Form2.Ocelot.Textarea
+import Formlet.Ocelot.Textarea as Formlet.Ocelot.Textarea
 import Halogen as Halogen
 import Halogen.HTML.Events as Halogen.HTML.Events
 import Halogen.HTML.Properties as Halogen.HTML.Properties
@@ -14,9 +14,9 @@ render ::
   forall slots m config action.
   { key :: String } ->
   { readonly :: Boolean | config } ->
-  Form2.Ocelot.Textarea.Render action ->
+  Formlet.Ocelot.Textarea.Render action ->
   Array (Halogen.ComponentHTML action slots m)
-render { key } { readonly } (Form2.Ocelot.Textarea.Render render') =
+render { key } { readonly } (Formlet.Ocelot.Textarea.Render render') =
   [ Ocelot.Block.Input.textarea
       [ Halogen.HTML.Properties.value render'.value
       , Halogen.HTML.Properties.placeholder render'.placeholder

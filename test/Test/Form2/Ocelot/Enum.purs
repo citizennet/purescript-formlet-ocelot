@@ -1,4 +1,4 @@
-module Test.Form2.Ocelot.Enum
+module Test.Formlet.Ocelot.Enum
   ( suite
   ) where
 
@@ -8,7 +8,7 @@ import Data.Bounded.Generic as Data.Bounded.Generic
 import Data.Enum.Generic as Data.Enum.Generic
 import Data.Show.Generic as Data.Show.Generic
 import Debug as Debug
-import Form2.Ocelot.Enum as Form2.Ocelot.Enum
+import Formlet.Ocelot.Enum as Formlet.Ocelot.Enum
 import Test.Unit as Test.Unit
 import Test.Utils as Test.Utils
 
@@ -39,8 +39,8 @@ instance Bounded TestEnum where
 
 suite :: Test.Unit.TestSuite
 suite =
-  Test.Unit.suite "Form2.Ocelot.Enum" do
+  Test.Unit.suite "Formlet.Ocelot.Enum" do
     Test.Unit.test "`enumOptions` should produce all values of a `Bounded` `Enum`" do
-      Test.Utils.equal [ A, B, C, D, E ] Form2.Ocelot.Enum.enumOptions
+      Test.Utils.equal [ A, B, C, D, E ] Formlet.Ocelot.Enum.enumOptions
     Test.Unit.test "`genericEnumOptions` should produce all unary constructors of a `Generic` data type" do
-      Test.Utils.equal [ A, B, C, D, E ] Form2.Ocelot.Enum.genericEnumOptions
+      Test.Utils.equal [ A, B, C, D, E ] Formlet.Ocelot.Enum.genericEnumOptions

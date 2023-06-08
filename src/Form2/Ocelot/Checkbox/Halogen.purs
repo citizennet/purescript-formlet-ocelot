@@ -1,10 +1,10 @@
-module Form2.Ocelot.Checkbox.Halogen
+module Formlet.Ocelot.Checkbox.Halogen
   ( render
   ) where
 
 import CitizenNet.Prelude
 
-import Form2.Ocelot.Checkbox as Form2.Ocelot.Checkbox
+import Formlet.Ocelot.Checkbox as Formlet.Ocelot.Checkbox
 import Halogen as Halogen
 import Halogen.HTML as Halogen.HTML
 import Halogen.HTML.Events as Halogen.HTML.Events
@@ -15,9 +15,9 @@ render ::
   forall slots m config action.
   { key :: String } ->
   { readonly :: Boolean | config } ->
-  Form2.Ocelot.Checkbox.Render action ->
+  Formlet.Ocelot.Checkbox.Render action ->
   Array (Halogen.ComponentHTML action slots m)
-render { key } { readonly } (Form2.Ocelot.Checkbox.Render options) =
+render { key } { readonly } (Formlet.Ocelot.Checkbox.Render options) =
   options
     # map \option ->
         Ocelot.Block.Checkbox.checkbox_
