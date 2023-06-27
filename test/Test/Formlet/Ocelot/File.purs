@@ -11,7 +11,7 @@ import Formlet as Formlet
 import Formlet.Ocelot.File as Formlet.Ocelot.File
 import Formlet.Render as Formlet.Render
 import Test.Unit as Test.Unit
-import Test.Utils as Test.Utils
+import Test.Unit.Assert as Test.Unit.Assert
 import URI as URI
 import URI.Host.RegName as URI.Host.RegName
 import URI.Path.Segment as URI.Path.Segment
@@ -45,11 +45,11 @@ suite =
       Test.Unit.test "`file` should not change its value if `readonly = true`" do
         Formlet.Ocelot.File.withRender (render file2 { readonly: true }) \rendered -> do
           uploadedFile <- rendered.upload mempty mockFile
-          Test.Utils.equal file1 (rendered.onChange (hush uploadedFile) file1)
+          Test.Unit.Assert.equal file1 (rendered.onChange (hush uploadedFile) file1)
       Test.Unit.test "`file` should change its value if `readonly = false`" do
         Formlet.Ocelot.File.withRender (render file2 { readonly: false }) \rendered -> do
           uploadedFile <- rendered.upload mempty mockFile
-          Test.Utils.equal file2 (rendered.onChange (hush uploadedFile) file1)
+          Test.Unit.Assert.equal file2 (rendered.onChange (hush uploadedFile) file1)
 
 -- The `File` API is only available in the browser environment, so we can't
 -- create a valid one here. We're not really using this `File` in the tests

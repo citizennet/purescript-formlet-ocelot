@@ -5,7 +5,6 @@ module Test.Formlet.Ocelot.Modal.Halogen
 import CitizenNet.Prelude
 
 import Data.Const as Data.Const
-import Debug as Debug
 import Effect.Aff as Effect.Aff
 import Formlet as Formlet
 import Formlet.Ocelot.Modal.Halogen as Formlet.Ocelot.Modal.Halogen
@@ -16,7 +15,6 @@ import Halogen.Test.Driver as Halogen.Test.Driver
 import Halogen.Test.Subscription as Halogen.Test.Subscription
 import Test.Unit as Test.Unit
 import Test.Unit.Assert as Test.Unit.Assert
-import Test.Utils as Test.Utils
 
 suite :: Test.Unit.TestSuite
 suite =
@@ -46,7 +44,7 @@ suite =
           }
       _ <- Effect.Aff.forkAff $ io.query (Formlet.Ocelot.Modal.Halogen.Open unit "initialValue" identity)
       actual <- io.query (Formlet.Ocelot.Modal.Halogen.GetValue identity)
-      Test.Utils.equal (Just "initialValue") actual
+      Test.Unit.Assert.equal (Just "initialValue") actual
     Test.Unit.test "the `Open` query should block and return the validated result" do
       io <-
         Halogen.Test.Driver.runUI
@@ -60,7 +58,7 @@ suite =
         Effect.Aff.delay (Effect.Aff.Milliseconds 100.0)
         io.query (Formlet.Ocelot.Modal.Halogen.Submit identity)
       actual <- io.query (Formlet.Ocelot.Modal.Halogen.Open unit "initialValue" identity)
-      Test.Utils.equal (Just "initialValueResult") actual
+      Test.Unit.Assert.equal (Just "initialValueResult") actual
     Test.Unit.test "the `Close` query should close the modal" do
       io <-
         Halogen.Test.Driver.runUI
@@ -127,7 +125,7 @@ suite =
       testValue io (Just "initialValue1")
       void $ io.query (Formlet.Ocelot.Modal.Halogen.Submit identity)
       actual <- Effect.Aff.joinFiber fiber
-      Test.Utils.equal (Just "result") actual
+      Test.Unit.Assert.equal (Just "result") actual
       testIsOpen io false
     Test.Unit.test "submitting the form should close the modal" do
       io <-
@@ -158,7 +156,7 @@ suite =
           Effect.Aff.delay (Effect.Aff.Milliseconds 100.0)
           testIsOpen io true
           actual <- io.query (Formlet.Ocelot.Modal.Halogen.Submit identity)
-          Test.Utils.equal Nothing actual
+          Test.Unit.Assert.equal Nothing actual
           testIsOpen io true
           io.query (Formlet.Ocelot.Modal.Halogen.Close unit)
         void $ io.query (Formlet.Ocelot.Modal.Halogen.Open unit "initialValue" identity)
@@ -188,17 +186,17 @@ testIsOpen ::
   Aff Unit
 testIsOpen io expected = do
   actual <- io.query (Formlet.Ocelot.Modal.Halogen.IsOpen identity)
-  Test.Utils.equal (Just expected) actual
+  Test.Unit.Assert.equal (Just expected) actual
 
 -- | Utility function for testing the internal form state of a
 -- | `Formlet.Ocelot.Modal.Halogen` component.
 testValue ::
   forall config output result value.
   Eq value =>
-  Debug.Debug value =>
+  Show value =>
   Halogen.HalogenIO (Formlet.Ocelot.Modal.Halogen.Query config value result) output Aff ->
   Maybe value ->
   Aff Unit
 testValue io expected = do
   actual <- io.query (Formlet.Ocelot.Modal.Halogen.GetValue identity)
-  Test.Utils.equal expected actual
+  Test.Unit.Assert.equal expected actual
