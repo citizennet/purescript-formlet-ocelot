@@ -1,5 +1,8 @@
 {-
-TODO: documentation
+{{GENERATED_DOC}}
+
+The `formlet-ocelot` package contains implementations for the `formlet`
+abstractions, specific to the Ocelot component library.
 -}
 let
   name = "formlet-ocelot"
@@ -52,8 +55,9 @@ in
       , "variant"
       , "web-file"
       ]
-  , packages = ../../packages.dhall
-  -- Due to a spago bug (see https://github.com/purescript/spago/issues/648)
-  -- `sources` are relative to root instead of config file.
-  , sources = [ "lib/${name}/src/**/*.purs", "lib/${name}/test/**/*.purs" ]
+  -- This path is relative to config file
+  , packages = {{PACKAGES_DIR}}/packages.dhall
+  -- This path is relative to project root
+  -- See https://github.com/purescript/spago/issues/648
+  , sources = [ "{{SOURCES_DIR}}/src/**/*.purs", "{{SOURCES_DIR}}/test/**/*.purs" ]
   }
