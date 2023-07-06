@@ -19,26 +19,23 @@ render ::
   Formlet.Ocelot.Toggle.Render action ->
   Array (Halogen.ComponentHTML action slots m)
 render { key } { readonly } (Formlet.Ocelot.Toggle.Render render') = case render'.label of
-  Nothing -> toggle
+  Nothing -> [ toggle ]
   Just label ->
     [ Halogen.HTML.div
         [ Ocelot.HTML.Properties.css "flex items-center" ]
-        ( toggle
-            <>
-              [ Halogen.HTML.span
-                  [ Ocelot.HTML.Properties.css "mb-2" ]
-                  [ Halogen.HTML.text label ]
-              ]
-        )
-    ]
-  where
-  toggle :: Array (Halogen.ComponentHTML action slots m)
-  toggle =
-    [ Ocelot.Block.Toggle.toggle
-        [ Halogen.HTML.Properties.checked render'.value
-        , Halogen.HTML.Properties.disabled (readonly || render'.readonly)
-        , Halogen.HTML.Events.onChecked render'.onChange
-        , Halogen.HTML.Properties.id key
-        , Halogen.HTML.Properties.name key
+        [ toggle
+        , Halogen.HTML.span
+            [ Ocelot.HTML.Properties.css "mb-2" ]
+            [ Halogen.HTML.text label ]
         ]
     ]
+  where
+  toggle :: Halogen.ComponentHTML action slots m
+  toggle =
+    Ocelot.Block.Toggle.toggle
+      [ Halogen.HTML.Properties.checked render'.value
+      , Halogen.HTML.Properties.disabled (readonly || render'.readonly)
+      , Halogen.HTML.Events.onChecked render'.onChange
+      , Halogen.HTML.Properties.id key
+      , Halogen.HTML.Properties.name key
+      ]
