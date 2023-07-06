@@ -21,7 +21,7 @@ suite =
           rendered :: Formlet.Ocelot.Toggle.Render (Boolean -> Boolean)
           rendered =
             Formlet.Render.match { toggle: map (un Data.Identity.Identity) }
-              $ Formlet.render Formlet.Ocelot.Toggle.toggle { readonly }
+              $ Formlet.render (Formlet.Ocelot.Toggle.toggle {}) { readonly }
               $ value
 
           expected :: Boolean
