@@ -31,6 +31,7 @@ render { readonly } (Formlet.Ocelot.DateTime.Render render') =
       unit
       component
       { disabled: readonly || render'.readonly
+      , interval: render'.interval
       , selection: render'.value
       , targetDate: Nothing
       , timezone: render'.timezone
@@ -53,6 +54,7 @@ type ChildSlots =
 
 type Input =
   { disabled :: Boolean
+  , interval :: Maybe Ocelot.DateTimePicker.Interval
   , selection :: Maybe DateTime
   , targetDate :: Maybe (Data.DateTime.Year /\ Data.DateTime.Month)
   , timezone :: TimeZone.TimeZone
@@ -114,7 +116,7 @@ component =
           unit
           Ocelot.DateTimePicker.component
           { disabled: state.disabled
-          , interval: Nothing -- NOTE(wenbo): use this to enforce end time before start time, and to remove dates in the past
+          , interval: state.interval
           , selection: toLocalDateTime state.timezone state.selection
           , targetDate: state.targetDate
           }
