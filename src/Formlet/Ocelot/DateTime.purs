@@ -1,5 +1,6 @@
 module Formlet.Ocelot.DateTime
-  ( Render(..)
+  ( Interval
+  , Render(..)
   , dateTime
   ) where
 
@@ -7,12 +8,29 @@ import CitizenNet.Prelude
 
 import Formlet as Formlet
 import Formlet.Render as Formlet.Render
+import Option as Option
 import TimeZone as TimeZone
+
+type Interval =
+  { end :: Maybe DateTime
+  , start :: Maybe DateTime
+  }
+
+type Params =
+  ( interval :: Maybe Interval
+  )
+
+type ParamsOptional =
+  ( interval :: Interval
+  )
+
+type ParamsRequired =
+  () :: Row Type
 
 newtype Render action =
   Render
-    { onChange :: Maybe DateTime -> action
-    , placeholder :: String
+    { interval :: Maybe Interval
+    , onChange :: Maybe DateTime -> action
     , readonly :: Boolean
     , timezone :: TimeZone.TimeZone
     , value :: Maybe DateTime
@@ -22,9 +40,11 @@ derive instance newtypeDateTime :: Newtype (Render action) _
 derive instance functorDateTime :: Functor Render
 
 dateTime ::
-  forall config options renders m.
+  forall config options polyParams renders m.
   Applicative m =>
-  { placeholder :: String } ->
+  Option.FromRecord polyParams ParamsRequired ParamsOptional =>
+  Option.ToRecord ParamsRequired ParamsOptional Params =>
+  Record polyParams ->
   Formlet.Form
     { readonly :: Boolean
     , timezone :: TimeZone.TimeZone
@@ -34,15 +54,22 @@ dateTime ::
     m
     (Maybe DateTime)
     (Maybe DateTime)
-dateTime { placeholder } =
-  Formlet.form_ \{ readonly, timezone } value ->
+dateTime polyParams =
+  Formlet.form_ \({ readonly, timezone }) value ->
     Formlet.Render.inj
       { dateTime:
           Render
-            { onChange: if readonly then const (pure identity) else pure <<< const
-            , placeholder
+            { interval: params.interval
+            , onChange: if readonly then const (pure identity) else pure <<< const
             , readonly
             , timezone
             , value
             }
       }
+  where
+  params :: Record Params
+  params =
+    Option.recordToRecord
+      ( optionRecord polyParams ::
+          OptionRecord ParamsRequired ParamsOptional
+      )
