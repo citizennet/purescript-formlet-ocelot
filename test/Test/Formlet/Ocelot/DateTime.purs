@@ -27,7 +27,7 @@ suite =
           rendered :: Formlet.Ocelot.DateTime.Render (Maybe DateTime -> Maybe DateTime)
           rendered =
             Formlet.Render.match { dateTime: map (un Data.Identity.Identity) }
-              $ Formlet.render (Formlet.Ocelot.DateTime.dateTime { placeholder: "" })
+              $ Formlet.render (Formlet.Ocelot.DateTime.dateTime {})
                   { readonly
                   , timezone: TimeZone.utc
                   }
