@@ -116,7 +116,12 @@ component =
           unit
           Ocelot.DateTimePicker.component
           { disabled: state.disabled
-          , interval: state.interval
+          , interval: do
+              interval <- state.interval
+              pure
+                { end: toLocalDateTime state.timezone interval.end
+                , start: toLocalDateTime state.timezone interval.start
+                }
           , selection: toLocalDateTime state.timezone state.selection
           , targetDate: state.targetDate
           }
