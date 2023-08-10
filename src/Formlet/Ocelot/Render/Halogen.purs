@@ -10,6 +10,7 @@ import Data.Functor.Variant as Data.Functor.Variant
 import Formlet.Field.Halogen as Formlet.Field.Halogen
 import Formlet.Ocelot.Array.Halogen as Formlet.Ocelot.Array.Halogen
 import Formlet.Ocelot.Checkbox.Halogen as Formlet.Ocelot.Checkbox.Halogen
+import Formlet.Ocelot.CheckboxSet.Halogen as Formlet.Ocelot.CheckboxSet.Halogen
 import Formlet.Ocelot.DateTime.Halogen as Formlet.Ocelot.DateTime.Halogen
 import Formlet.Ocelot.Dropdown.Halogen as Formlet.Ocelot.Dropdown.Halogen
 import Formlet.Ocelot.File.Halogen as Formlet.Ocelot.File.Halogen
@@ -69,6 +70,7 @@ render renderOtherOptions renderOthers config' =
             )
             config
       , checkbox: Formlet.Ocelot.Checkbox.Halogen.render { key } config
+      , checkboxSet: Formlet.Ocelot.CheckboxSet.Halogen.render { key } config
       , dateTime: Formlet.Ocelot.DateTime.Halogen.render config
       , dropdown: Formlet.Ocelot.Dropdown.Halogen.render config
       , file: Formlet.Ocelot.File.Halogen.render config
