@@ -17,7 +17,7 @@ render ::
   { readonly :: Boolean | config } ->
   Formlet.Ocelot.Checkbox.Render action ->
   Array (Halogen.ComponentHTML action slots m)
-render { key } { readonly } (Formlet.Ocelot.Checkbox.Render options) =
+render { key } { readonly } (Formlet.Ocelot.Checkbox.Render { options }) =
   options
     # map \option ->
         Ocelot.Block.Checkbox.checkbox_

@@ -43,7 +43,7 @@ checkboxSuite = do
 
           onChange' :: Maybe (Boolean -> Boolean -> Boolean)
           onChange' = ado
-            option <- Data.Array.head (un Formlet.Ocelot.Checkbox.Render rendered)
+            option <- Data.Array.head (un Formlet.Ocelot.Checkbox.Render rendered).options
             in option.onChange
         in
           case onChange' of
@@ -79,6 +79,7 @@ checkboxSuite = do
             Partial.Unsafe.unsafePartial
               $ Data.Maybe.fromJust
               $ Data.Array.NonEmpty.fromArray
+              $ _.options
               $ un Formlet.Ocelot.Checkbox.Render rendered
         selectedOption <- Test.QuickCheck.Gen.elements options
         let
@@ -113,7 +114,7 @@ checkboxSetSuite =
           expected :: Array String
           expected = map (_ <> "a") options
         in
-          expected === map _.label (un Formlet.Ocelot.Checkbox.Render rendered)
+          expected === map _.label (un Formlet.Ocelot.Checkbox.Render rendered).options
     Test.Unit.test "A `checkboxSet` option's `onChange` should appropriately change the Form's value" do
       Test.Unit.QuickCheck.quickCheck \options checked -> do
         value <- Data.Set.fromFoldable <$> genTake (Data.Array.NonEmpty.toArray options)
@@ -198,7 +199,7 @@ checkboxSetSuite =
           result =
             Formlet.validate
               ( Formlet.Ocelot.Checkbox.checkboxSet
-                  { display: identity
+                  { display: identity :: String -> String
                   , options
                   } ::
                   Formlet.Form _ _ Data.Identity.Identity _ _
@@ -264,6 +265,7 @@ testRenderCheckboxSetOptions { display, options, readonly, value } =
   Partial.Unsafe.unsafePartial
     $ Data.Maybe.fromJust
     $ Data.Array.NonEmpty.fromArray
+    $ _.options
     $ Formlet.Render.match { checkbox: un Formlet.Ocelot.Checkbox.Render <<< map (un Data.Identity.Identity) }
     $ Formlet.render
         ( Formlet.Ocelot.Checkbox.checkboxSet
