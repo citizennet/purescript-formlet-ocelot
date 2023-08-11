@@ -40,4 +40,11 @@ render { key } { readonly } (Formlet.Ocelot.CheckboxSet.Render { columns, option
           Formlet.Ocelot.Checkbox.Halogen.render
             { key }
             { readonly }
-            (Formlet.Ocelot.Checkbox.Render [ option ])
+            ( Formlet.Ocelot.Checkbox.Render
+                [ { checked: option.checked
+                  , label: option.label
+                  , onChange: option.onChange
+                  , readonly
+                  }
+                ]
+            )

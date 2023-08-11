@@ -30,7 +30,6 @@ newtype Render a =
           { checked :: Boolean
           , label :: String
           , onChange :: Boolean -> a
-          , readonly :: Boolean
           }
     }
 
@@ -97,7 +96,6 @@ checkboxSet polyParams =
                             { checked: Data.Set.member a value
                             , label: params.display a
                             , onChange: if readonly then const (pure identity) else onChange
-                            , readonly
                             }
                 }
           }
