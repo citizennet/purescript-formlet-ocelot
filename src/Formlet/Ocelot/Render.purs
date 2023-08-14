@@ -17,6 +17,7 @@ import CitizenNet.Prelude
 import Formlet as Formlet
 import Formlet.Ocelot.Array as Formlet.Ocelot.Array
 import Formlet.Ocelot.Checkbox as Formlet.Ocelot.Checkbox
+import Formlet.Ocelot.CheckboxSet as Formlet.Ocelot.CheckboxSet
 import Formlet.Ocelot.DateTime as Formlet.Ocelot.DateTime
 import Formlet.Ocelot.Dropdown as Formlet.Ocelot.Dropdown
 import Formlet.Ocelot.File as Formlet.Ocelot.File
@@ -63,6 +64,7 @@ type Render options renders =
 type Renders options renders =
   ( array :: Formlet.Ocelot.Array.Render (Forest options renders)
   , checkbox :: Formlet.Ocelot.Checkbox.Render
+  , checkboxSet :: Formlet.Ocelot.CheckboxSet.Render
   , dateTime :: Formlet.Ocelot.DateTime.Render
   , dropdown :: Formlet.Ocelot.Dropdown.Render
   , file :: Formlet.Ocelot.File.Render
