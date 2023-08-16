@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "big-integer": "1.6.51",
+    "moment-timezone": "0.5.43"
+  }
+}
