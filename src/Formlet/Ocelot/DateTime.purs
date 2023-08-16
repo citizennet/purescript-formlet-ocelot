@@ -6,6 +6,7 @@ module Formlet.Ocelot.DateTime
 
 import CitizenNet.Prelude
 
+import Data.Time as Data.Time
 import Formlet as Formlet
 import Formlet.Render as Formlet.Render
 import Option as Option
@@ -17,11 +18,13 @@ type Interval =
   }
 
 type Params =
-  ( interval :: Maybe Interval
+  ( defaultTime :: Maybe Data.Time.Time
+  , interval :: Maybe Interval
   )
 
 type ParamsOptional =
-  ( interval :: Interval
+  ( defaultTime :: Data.Time.Time
+  , interval :: Interval
   )
 
 type ParamsRequired =
@@ -29,7 +32,8 @@ type ParamsRequired =
 
 newtype Render action =
   Render
-    { interval :: Maybe Interval
+    { defaultTime :: Maybe Data.Time.Time
+    , interval :: Maybe Interval
     , onChange :: Maybe DateTime -> action
     , readonly :: Boolean
     , timezone :: TimeZone.TimeZone
@@ -59,7 +63,8 @@ dateTime polyParams =
     Formlet.Render.inj
       { dateTime:
           Render
-            { interval: params.interval
+            { defaultTime: params.defaultTime
+            , interval: params.interval
             , onChange: if readonly then const (pure identity) else pure <<< const
             , readonly
             , timezone

@@ -9,6 +9,7 @@ module Formlet.Ocelot.DateTime.Halogen
 import CitizenNet.Prelude
 
 import Data.DateTime as Data.DateTime
+import Data.Time as Data.Time
 import Formlet.Ocelot.DateTime as Formlet.Ocelot.DateTime
 import Halogen as Halogen
 import Halogen.HTML as Halogen.HTML
@@ -30,7 +31,8 @@ render { readonly } (Formlet.Ocelot.DateTime.Render render') =
       (Proxy :: Proxy "dateTimePicker")
       unit
       component
-      { disabled: readonly || render'.readonly
+      { defaultTime: render'.defaultTime
+      , disabled: readonly || render'.readonly
       , interval: render'.interval
       , selection: render'.value
       , targetDate: Nothing
@@ -53,7 +55,8 @@ type ChildSlots =
   )
 
 type Input =
-  { disabled :: Boolean
+  { defaultTime :: Maybe Data.Time.Time
+  , disabled :: Boolean
   , interval :: Maybe Ocelot.DateTimePicker.Interval
   , selection :: Maybe DateTime
   , targetDate :: Maybe (Data.DateTime.Year /\ Data.DateTime.Month)
@@ -115,7 +118,8 @@ component =
           (Proxy :: Proxy "dateTimePicker")
           unit
           Ocelot.DateTimePicker.component
-          { disabled: state.disabled
+          { defaultTime: state.defaultTime
+          , disabled: state.disabled
           , interval: do
               interval <- state.interval
               pure
