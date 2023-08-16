@@ -227,7 +227,7 @@ let additions =
               , "variant"
               ]
           , repo = "https://github.com/citizennet/purescript-ocelot.git"
-          , version = "v0.34.2"
+          , version = "v0.35.0"
           }
       , option =
           { dependencies =

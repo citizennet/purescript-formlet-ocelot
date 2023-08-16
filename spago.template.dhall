@@ -42,6 +42,7 @@ in
       , "prelude"
       , "profunctor-lenses"
       , "quickcheck"
+      , "record"
       , "remotedata"
       , "strings"
       , "test-unit"
