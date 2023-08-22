@@ -22,6 +22,7 @@ import Formlet.Ocelot.DateTime as Formlet.Ocelot.DateTime
 import Formlet.Ocelot.Dropdown as Formlet.Ocelot.Dropdown
 import Formlet.Ocelot.File as Formlet.Ocelot.File
 import Formlet.Ocelot.Radio as Formlet.Ocelot.Radio
+import Formlet.Ocelot.RadioGroup as Formlet.Ocelot.RadioGroup
 import Formlet.Ocelot.Sequence as Formlet.Ocelot.Sequence
 import Formlet.Ocelot.Table as Formlet.Ocelot.Table
 import Formlet.Ocelot.TabularSelect as Formlet.Ocelot.TabularSelect
@@ -69,6 +70,7 @@ type Renders options renders =
   , dropdown :: Formlet.Ocelot.Dropdown.Render
   , file :: Formlet.Ocelot.File.Render
   , radio :: Formlet.Ocelot.Radio.Render
+  , radioGroup :: Formlet.Ocelot.RadioGroup.Render (Forest options renders)
   , sequence :: Formlet.Ocelot.Sequence.Render (Forest options renders)
   , table :: Formlet.Ocelot.Table.Render (Forest options renders)
   , tabularSelect :: Formlet.Ocelot.TabularSelect.Render
