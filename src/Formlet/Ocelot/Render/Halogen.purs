@@ -15,6 +15,7 @@ import Formlet.Ocelot.DateTime.Halogen as Formlet.Ocelot.DateTime.Halogen
 import Formlet.Ocelot.Dropdown.Halogen as Formlet.Ocelot.Dropdown.Halogen
 import Formlet.Ocelot.File.Halogen as Formlet.Ocelot.File.Halogen
 import Formlet.Ocelot.Radio.Halogen as Formlet.Ocelot.Radio.Halogen
+import Formlet.Ocelot.RadioGroup.Halogen as Formlet.Ocelot.RadioGroup.Halogen
 import Formlet.Ocelot.Render as Formlet.Ocelot.Render
 import Formlet.Ocelot.Sequence.Halogen as Formlet.Ocelot.Sequence.Halogen
 import Formlet.Ocelot.Table.Halogen as Formlet.Ocelot.Table.Halogen
@@ -75,6 +76,12 @@ render renderOtherOptions renderOthers config' =
       , dropdown: Formlet.Ocelot.Dropdown.Halogen.render config
       , file: Formlet.Ocelot.File.Halogen.render config
       , radio: Formlet.Ocelot.Radio.Halogen.render { key } config
+      , radioGroup: Formlet.Ocelot.RadioGroup.Halogen.render
+          ( render renderOtherOptions renderOthers config
+              <<< Formlet.Ocelot.Render.mapKey (key <> _)
+          )
+          { key }
+          config
       , sequence:
           Formlet.Ocelot.Sequence.Halogen.render
             ( \sectionKey _ ->
@@ -84,7 +91,7 @@ render renderOtherOptions renderOthers config' =
             config
       , table:
           Formlet.Ocelot.Table.Halogen.render
-            ( \{ column, row } ->
+            ( \({ column, row }) ->
                 render renderOtherOptions renderOthers config
                   <<< Formlet.Ocelot.Render.mapKey (_ <> "-" <> row <> "-" <> column)
             )

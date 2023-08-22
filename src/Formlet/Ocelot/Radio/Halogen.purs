@@ -19,7 +19,7 @@ render ::
   Array (Halogen.ComponentHTML action slots m)
 render { key } { readonly } (Formlet.Ocelot.Radio.Render render') =
   render'.options
-    # map \{ label, onSelect } ->
+    # map \({ label, onSelect }) ->
         Ocelot.Block.Radio.radio_
           [ Halogen.HTML.Events.onClick \_ -> onSelect
           , Halogen.HTML.Properties.checked (render'.value == Just label)
