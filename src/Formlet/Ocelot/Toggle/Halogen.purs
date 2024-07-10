@@ -36,6 +36,5 @@ render { key } { readonly } (Formlet.Ocelot.Toggle.Render render') = case render
       [ Halogen.HTML.Properties.checked render'.value
       , Halogen.HTML.Properties.disabled (readonly || render'.readonly)
       , Halogen.HTML.Events.onChecked render'.onChange
-      , Halogen.HTML.Properties.id key
       , Halogen.HTML.Properties.name key
       ]
