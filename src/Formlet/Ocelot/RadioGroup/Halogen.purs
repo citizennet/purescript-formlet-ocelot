@@ -17,11 +17,10 @@ import Ocelot.HTML.Properties as Ocelot.HTML.Properties
 render ::
   forall action config m render slots.
   (render action -> Halogen.ComponentHTML action slots m) ->
-  { key :: String } ->
   { readonly :: Boolean | config } ->
   Formlet.Ocelot.RadioGroup.Render render action ->
   Array (Halogen.ComponentHTML action slots m)
-render renderElement { key } { readonly } (Formlet.Ocelot.RadioGroup.Render render') =
+render renderElement { readonly } (Formlet.Ocelot.RadioGroup.Render render') =
   [ Halogen.HTML.div
       [ Ocelot.HTML.Properties.css "flex flex-col" ]
       ( ( render'.options # Data.Array.mapWithIndex \index ({ label, onSelect }) ->
@@ -33,7 +32,6 @@ render renderElement { key } { readonly } (Formlet.Ocelot.RadioGroup.Render rend
               [ Halogen.HTML.Events.onClick \_ -> onSelect
               , Halogen.HTML.Properties.checked (render'.value == Just label)
               , Halogen.HTML.Properties.disabled (readonly || render'.readonly)
-              , Halogen.HTML.Properties.name key
               ]
               [ Halogen.HTML.text label ]
         )

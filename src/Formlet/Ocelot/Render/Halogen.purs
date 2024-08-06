@@ -75,12 +75,11 @@ render renderOtherOptions renderOthers config' =
       , dateTime: Formlet.Ocelot.DateTime.Halogen.render config
       , dropdown: Formlet.Ocelot.Dropdown.Halogen.render config
       , file: Formlet.Ocelot.File.Halogen.render config
-      , radio: Formlet.Ocelot.Radio.Halogen.render { key } config
+      , radio: Formlet.Ocelot.Radio.Halogen.render config
       , radioGroup: Formlet.Ocelot.RadioGroup.Halogen.render
           ( render renderOtherOptions renderOthers config
               <<< Formlet.Ocelot.Render.mapKey (key <> _)
           )
-          { key }
           config
       , sequence:
           Formlet.Ocelot.Sequence.Halogen.render
