@@ -13,17 +13,15 @@ import Ocelot.Block.Radio as Ocelot.Block.Radio
 
 render ::
   forall slots m config action.
-  { key :: String } ->
   { readonly :: Boolean | config } ->
   Formlet.Ocelot.Radio.Render action ->
   Array (Halogen.ComponentHTML action slots m)
-render { key } { readonly } (Formlet.Ocelot.Radio.Render render') =
+render { readonly } (Formlet.Ocelot.Radio.Render render') =
   render'.options
     # map \({ label, onSelect }) ->
         Ocelot.Block.Radio.radio_
           [ Halogen.HTML.Events.onClick \_ -> onSelect
           , Halogen.HTML.Properties.checked (render'.value == Just label)
           , Halogen.HTML.Properties.disabled (readonly || render'.readonly)
-          , Halogen.HTML.Properties.name key
           ]
           [ Halogen.HTML.text label ]
